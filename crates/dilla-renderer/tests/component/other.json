@@ -1,0 +1,22 @@
+{
+  "@component": "other",
+  "label": "foo",
+  "text": [
+    " bar ",
+    {
+      "@component": "other",
+      "label": "some",
+      "attributes": {
+        "data-some": "stuff"
+      }
+    }
+  ],
+  "attributes": {
+    "data-foo": "bar",
+    "class": [
+      "from",
+      "payload",
+      "bar"
+    ]
+  }
+}

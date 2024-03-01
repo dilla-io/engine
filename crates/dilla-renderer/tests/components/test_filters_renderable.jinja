@@ -1,0 +1,28 @@
+{% if renderable %}
+  {{ renderable }}
+  {{ renderable|add_class('inside') }}
+  {{ renderable|add_class('inside')|add_class('more') }}
+  {{ renderable }}
+{% endif %}
+{% if renderable_attr %}
+  {{ renderable_attr }}
+  {{ renderable_attr|set_attribute('no-value') }}
+  {{ renderable_attr|set_attribute('data-new', 'inside') }}
+  {{ renderable_attr|set_attribute('data', 'inside') }}
+  {{ renderable_attr|set_attribute('data', 'inside')|set_attribute('data-new', 'inside') }}
+{% endif %}
+{% if renderable_chained %}
+  {{ renderable_chained }}
+  {{ renderable_chained|add_class('inside')|set_attribute('data-new', 'inside') }}
+  {{ renderable_chained|add_class('inside')|set_attribute('data-new', 'inside')|add_class('inside2')|set_attribute('data-new2', 'inside') }}
+{% endif %}
+{% if test_undefined %}
+  !{{ renderable }}?
+  {{ renderable|add_class('inside') }}
+  {{ renderable|add_class('inside')|add_class('more') }}
+  !!{{ renderable }}??
+  {{ renderable|add_class('inside')|set_attribute('data-new', 'inside') }}
+  !!!{{ renderable }}???
+  {{ renderable_chained|add_class('inside')|set_attribute('data-new', 'inside')|add_class('inside2')|set_attribute('data-new2', 'inside') }}
+  !!!!{{ renderable }}????
+{% endif %}

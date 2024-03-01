@@ -1,0 +1,11 @@
+{
+  "@element": "span",
+  "@content": "foo",
+  "@local_variables": {
+    "var-1": "#222222",
+    "var-2": "#333333",
+    "var-3": "#444444",
+    "var-3-will-be-ignored": "because default",
+    "ignored": "no-value"
+  }
+}

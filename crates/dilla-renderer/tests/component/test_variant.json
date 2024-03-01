@@ -1,0 +1,34 @@
+[
+  {
+    "@component": "other",
+    "@variant": "variant",
+    "text": "is variant"
+  },
+  {
+    "@component": "other",
+    "@variant": "invalid-variant",
+    "text": "NOT variant"
+  },
+  {
+    "@component": "other",
+    "variant": "variant",
+    "text": "NOT variant"
+  },
+  {
+    "@component": "other",
+    "variant": "invalid-variant",
+    "text": "NOT variant"
+  },
+  {
+    "@component": "other",
+    "@variant": "variant",
+    "variant": "variant2",
+    "text": "is variant"
+  },
+  {
+    "@component": "other",
+    "@variant": "variant2",
+    "variant": "variant",
+    "text": "is variant2"
+  }
+]

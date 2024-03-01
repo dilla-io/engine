@@ -1,0 +1,36 @@
+[
+  {
+    "@component": "test",
+    "label": "dark attribute",
+    "@theme": "dark"
+  },
+  {
+    "@component": "test",
+    "label": "dark class",
+    "@theme": "dark-class"
+  },
+  {
+    "@component": "test",
+    "label": "theme not in config",
+    "@theme": "unknown"
+  },
+  {
+    "@component": "test",
+    "label": "empty theme",
+    "@theme": ""
+  },
+  {
+    "@component": "test",
+    "label": "invalid array theme",
+    "@theme": [
+      "dark"
+    ]
+  },
+  {
+    "@component": "test",
+    "label": "invalid obj theme",
+    "@theme": {
+      "dark": "dark"
+    }
+  }
+]

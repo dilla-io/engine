@@ -1,0 +1,49 @@
+{
+  "@element": "h2",
+  "@content": {
+    "@element": "div",
+    "@content": [
+      "foo",
+      {
+        "@element": "span",
+        "@content": "bar",
+        "@library": {
+          "css": {
+            "inside.css": {
+              "media": "screen"
+            }
+          },
+          "js": {
+            "inside.js": {
+              "defer": "true"
+            }
+          }
+        }
+      }
+    ],
+    "@library": {
+      "css": {
+        "foo.css": {
+          "media": "screen"
+        }
+      },
+      "js": {
+        "foo.js": {
+          "defer": "true"
+        }
+      }
+    }
+  },
+  "@library": {
+    "css": {
+      "parent.css": {
+        "media": "screen"
+      }
+    },
+    "js": {
+      "parent.js": {
+        "defer": true
+      }
+    }
+  }
+}

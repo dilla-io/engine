@@ -1,0 +1,22 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "GPL-3.0-or-later"
+authors = ["Jean Valverde <jean@dilla.io>"]
+homepage = "https://dilla.io"
+documentation = "https://doc.dilla.io"
+keywords = ["wasm", "design system", "web assembly"]
+repository = "https://gitlab.com/dilla-io/engine.git"
+
+[profile.release]
+# debug = true
+# https://github.com/johnthagen/min-sized-rust
+strip = true
+# opt-level = "s"
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dilla #TYPE# - TEST Describer - #DS# v#VERSION#</title>
+  </head>
+
+  <body>
+    <div style="margin: 0 10px 0 10px; padding: 10px 10px 0 10px;">
+      <h3 style="margin-top: 0;">Test Describer for #TYPE# #DS# v#VERSION#</h3>
+      <label>Artefact</label>
+      <input type="text" id="artefact" style="width: 25%;" value="component" />
+      <label>Id</label>
+      <input type="text" id="id" style="width: 25%;" value="_list" />
+      <button id="submit" type="submit" style="vertical-align: top;">Describe</button>
+      <input id="test_reset" type="button" value="Reset" />
+    </div>
+    <hr />
+    <div style="margin: 10px; padding: 10px;">
+      <pre><code id="dilla"></code></pre>
+    </div>
+    <script type="module">
+      import createPlugin from './node_modules/@extism/extism/dist/browser/mod.js'
+
+      const wasm_url = window.location.href.replace('/browser/describe.html', '/#DS#_dev.wasm')
+
+      if (localStorage.getItem('artefact') !== null) {
+        document.getElementById('artefact').value = localStorage.getItem('artefact')
+      }
+      if (localStorage.getItem('id') !== null) {
+        document.getElementById('id').value = localStorage.getItem('id')
+      }
+
+      document.getElementById('submit').addEventListener('click', () => {
+        describe()
+      })
+      document.getElementById('test_reset').addEventListener('click', () => {
+        localStorage.removeItem('artefact')
+        localStorage.removeItem('id')
+      })
+
+      async function describe() {
+        try {
+          const artefact = document.getElementById('artefact').value
+          const id = document.getElementById('id').value
+          const request = artefact + '::' + id
+
+          localStorage.setItem('artefact', artefact)
+          localStorage.setItem('id', id)
+
+          const plugin = await createPlugin(wasm_url, {
+            useWasi: true,
+          })
+          const req = await plugin.call('describe', new TextEncoder().encode(request))
+          const result = new TextDecoder().decode(req.buffer)
+
+          document.getElementById('dilla').innerHTML = result
+          await plugin.close()
+        } catch (error) {
+          console.error(`[Dilla #TYPE#] Fail render`, error)
+        }
+      }
+
+      describe()
+    </script>
+  </body>
+</html>

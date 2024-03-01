@@ -1,0 +1,15 @@
+{
+  "@element": "p",
+  "class": [
+    "class-1",
+    "class-2",
+    "class-3"
+  ],
+  "@styles": [
+    "style-1",
+    "style-2",
+    "style-3"
+  ],
+  "data-foo": "bar",
+  "@content": "foo"
+}

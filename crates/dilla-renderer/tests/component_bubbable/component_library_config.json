@@ -1,0 +1,15 @@
+{
+  "@component": "test_with_library",
+  "@library": {
+    "css": {
+      "payload.css": {
+        "media": "screen"
+      }
+    },
+    "js": {
+      "payload.js": {
+        "async": true
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "@template": "<span{{ attr }}><span{{ foo }}>{{ test }}</span></span>",
+  "test": "My test",
+  "attr": {
+    "class": [
+      "foo",
+      "bar"
+    ],
+    "style": {
+      "--var-1:": "#222;",
+      "--var-2:": "#333;"
+    },
+    "data-array": [
+      "arr1",
+      "arr2"
+    ],
+    "data-obj": {
+      "k1": "v1",
+      "k2": "v2"
+    },
+    "data-str": "lorem",
+    "data-bool": true,
+    "data-num": 45,
+    "data-num-neg": -45,
+    "data-float": 45.33,
+    "data-float-neg": -45.33
+  },
+  "foo": {
+    "data": [
+      "foo",
+      "bar"
+    ]
+  }
+}

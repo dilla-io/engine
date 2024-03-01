@@ -1,0 +1,6 @@
+- {{ attributes }} -
+{% set attributes = attributes|add_class("inside")|set_attribute("data", "inside") %}
+{{ attributes }} :: {{ expected_attributes }}
+- {{ test_attributes }} -
+{% set test_attributes = test_attributes|add_class("inside")|set_attribute("data", "inside") %}
+{{ test_attributes }} :: {{ expected_test_attributes }}

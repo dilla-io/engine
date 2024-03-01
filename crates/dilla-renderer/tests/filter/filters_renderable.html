@@ -1,0 +1,84 @@
+# filter add_class() on renderable @component
+class="inside"
+class="inside more"
+data="foo"
+class="inside" data="foo"
+class="inside more" data="foo"
+data="foo"
+class="foo" data="foo"
+class="foo inside" data="foo"
+class="foo inside more" data="foo"
+class="foo" data="foo"
+class="foo bar" data="foo"
+class="foo bar inside" data="foo"
+class="foo bar inside more" data="foo"
+class="foo bar" data="foo"
+data="foo"
+class="inside" data="foo"
+class="inside more" data="foo"
+data="foo"
+class="foo" data="foo"
+class="foo inside" data="foo"
+class="foo inside more" data="foo"
+class="foo" data="foo"
+class="foo bar" data="foo"
+class="foo bar inside" data="foo"
+class="foo bar inside more" data="foo"
+class="foo bar" data="foo"
+# filter add_class() on renderable @element
+<p></p>
+<p class="inside"></p>
+<p class="inside more"></p>
+<p></p>
+<p data="foo"></p>
+<p class="inside" data="foo"></p>
+<p class="inside more" data="foo"></p>
+<p data="foo"></p>
+<p class="foo" data="foo"></p>
+<p class="foo inside" data="foo"></p>
+<p class="foo inside more" data="foo"></p>
+<p class="foo" data="foo"></p>
+<p class="foo bar" data="foo"></p>
+<p class="foo bar inside" data="foo"></p>
+<p class="foo bar inside more" data="foo"></p>
+<p class="foo bar" data="foo"></p>
+<p class="foo bar" data="foo"></p>
+<p class="foo bar inside" data="foo"></p>
+<p class="foo bar inside more" data="foo"></p>
+<p class="foo bar" data="foo"></p>
+# filter set_attribute() on renderable @element
+<p></p>
+<p no-value></p>
+<p data-new="inside"></p>
+<p data="inside"></p>
+<p data="inside" data-new="inside"></p>
+<p data="foo"></p>
+<p data="foo" no-value></p>
+<p data="foo" data-new="inside"></p>
+<p data="inside"></p>
+<p data="inside" data-new="inside"></p>
+# filter set_attribute() on renderable @component
+- no attributes
+no-value - no attributes
+data-new="inside" - no attributes
+data="inside" - no attributes
+data="inside" data-new="inside" - no attributes
+class="foo bar" data="foo"
+class="foo bar" data="foo" no-value
+class="foo bar" data="foo" data-new="inside"
+class="foo bar" data="foo inside"
+class="foo bar" data="foo inside" data-new="inside"
+# filter chained on renderable @component
+class="foo bar" data="foo"
+class="foo bar inside" data="foo" data-new="inside"
+class="foo bar inside inside2" data="foo" data-new="inside" data-new2="inside"
+# filter on undefined renderable
+!?
+!!??
+!!!???
+!!!!????
+# filter on renderable @template
+<span class="foo">foo</span>
+<span class="foo">foo</span>
+<span class="foo">foo</span>
+<span class="foo">foo</span>

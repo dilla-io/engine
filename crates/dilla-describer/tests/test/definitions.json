@@ -1,0 +1,231 @@
+{
+    "id": "test",
+    "label": "Test",
+    "description": "A test.",
+    "homepage": "https://test.org",
+    "license": "GPL",
+    "dateModified": "2023-11-18T22:15:24",
+    "version": "0.1.0",
+    "## Next two lines are for doc tests": "DO NOT Edit",
+    "test": "test",
+    "tests": {"test":"test"},
+    "## More real life examples": "",
+    "components": {
+        "test_component": {
+            "id": "test_component",
+            "label": "Test component",
+            "description": "Test component.",
+            "homepage": "https://test.org/component/test/",
+            "variants": {
+                "primary": {
+                    "id": "primary",
+                    "label": "Primary"
+                },
+                "secondary": {
+                    "id": "secondary",
+                    "label": "Secondary"
+                }
+            },
+            "slots": {
+                "heading": {
+                    "id": "heading",
+                    "label": "Heading",
+                    "description": "The heading. Optional."
+                },
+                "message": {
+                    "id": "message",
+                    "label": "Message",
+                    "description": "The message."
+                }
+            },
+            "props": {
+                "dismissible": {
+                    "id": "dismissible",
+                    "label": "Dismissible?",
+                    "description": "It’s possible to dismiss any alert inline",
+                    "schema": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "examples": {
+                "preview": {
+                    "id": "preview",
+                    "label": "Preview",
+                    "renderable": {
+                        "@component": "test",
+                        "heading": "Well done!",
+                        "message": " A simple test, check it out! ",
+                        "dismissible": true
+                    }
+                }
+            },
+            "_path": "/components/alert"
+        },
+        "test_component_other": {
+            "id": "test_component_other",
+            "label": "Test component other",
+            "description": "Test component other.",
+            "homepage": "https://test.org/component/test_other/",
+            "variants": {
+                "primary": {
+                    "id": "primary",
+                    "label": "Primary"
+                },
+                "secondary": {
+                    "id": "secondary",
+                    "label": "Secondary"
+                }
+            },
+            "slots": {
+                "heading": {
+                    "id": "heading",
+                    "label": "Heading",
+                    "description": "The heading. Optional."
+                },
+                "message": {
+                    "id": "message",
+                    "label": "Message",
+                    "description": "The message."
+                }
+            },
+            "props": {
+                "dismissible": {
+                    "id": "dismissible",
+                    "label": "Dismissible?",
+                    "description": "It’s possible to dismiss any alert inline",
+                    "schema": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "examples": {
+                "preview": {
+                    "id": "preview",
+                    "label": "Preview",
+                    "renderable": {
+                        "@component": "test",
+                        "heading": "Well done!",
+                        "message": " A simple test, check it out! ",
+                        "dismissible": true
+                    }
+                }
+            },
+            "_path": "/components/alert"
+        }
+    },
+    "styles": {
+        "test_style": {
+            "id": "test_style",
+            "label": "Test style",
+            "description": "Test style.",
+            "group": "Tests",
+            "options": {
+                "test": {
+                    "id": "test",
+                    "label": "All"
+                },
+                "test-top": {
+                    "id": "test-top",
+                    "label": "Top"
+                },
+                "test-right": {
+                    "id": "test-right",
+                    "label": "Right"
+                },
+                "test-bottom": {
+                    "id": "test-bottom",
+                    "label": "Bottom"
+                },
+                "test-left": {
+                    "id": "test-left",
+                    "label": "Left"
+                }
+            },
+            "previewed_with": [
+                "p-2",
+                "bg-light"
+            ]
+        },
+        "test_style_other": {
+            "id": "test_style_other",
+            "label": "Test style other",
+            "description": "Test style other.",
+            "group": "Tests",
+            "options": {
+                "test": {
+                    "id": "test",
+                    "label": "All"
+                },
+                "test-top": {
+                    "id": "test-top",
+                    "label": "Top"
+                },
+                "test-right": {
+                    "id": "test-right",
+                    "label": "Right"
+                },
+                "test-bottom": {
+                    "id": "test-bottom",
+                    "label": "Bottom"
+                },
+                "test-left": {
+                    "id": "test-left",
+                    "label": "Left"
+                }
+            },
+            "previewed_with": [
+                "p-2",
+                "bg-light"
+            ]
+        }
+    },
+    "examples": {
+        "test_example": {
+            "id": "test_example",
+            "label": "Test example",
+            "description": "Example test",
+            "homepage": "https://test.org/example/test/",
+            "renderable": [
+                {
+                    "@element": "div",
+                    "@content": "test",
+                    "@styles": [
+                        "test-top"
+                    ],
+                    "class": [
+                        "test",
+                        "py-5"
+                    ]
+                }
+            ],
+            "_path": "/examples"
+        }
+    },
+    "libraries": {
+        "test_lib_1": {
+            "id": "test_lib_1",
+            "label": "Test lib 1",
+            "homepage": "https://test.com/lib/1",
+            "license": "MIT",
+            "css": {
+                "https://test.com/lib_1.min.css": {}
+            },
+            "js": {
+                "https://test.com/lib_1.min.js": {}
+            }
+        },
+        "test_lib_2": {
+            "id": "test_lib_2",
+            "label": "Test lib 2",
+            "homepage": "https://test.com/lib/2",
+            "license": "MIT",
+            "css": {
+                "https://test.com/lib_2.min.css": {}
+            },
+            "js": {
+                "https://test.com/lib_2.min.js": {}
+            }
+        }
+    }
+}

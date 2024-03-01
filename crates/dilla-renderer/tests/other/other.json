@@ -1,0 +1,26 @@
+[
+  {
+    "# Test nested var access and safe filter": "",
+    "@template": "{{ test }} {{ nested.foo }} {{ nested_more[0].foo }}? {{ safe|safe }}",
+    "test": "My test",
+    "nested": {
+      "foo": "is working"
+    },
+    "nested_more": [
+      {
+        "foo": "well"
+      }
+    ],
+    "safe": "<b>is it?</b>"
+  },
+  {
+    "# Test a common ui_suite variant set": "",
+    "@template": "{% set test = {}|add_class('test-' ~ variant|lower|replace('_', '-')) %}{{ test }}",
+    "variant": "sOmE__VaRiANT_EXpAND-ok"
+  },
+  {
+    "# Test a common ui_suite multiple variants set": "",
+    "@template": "{% set variants = variant|split('__')|map('lower')|map('prepend', 'test-')|map('replace', '_', '-') %}{% set test = {}|add_class(variants) %}{{ test }}",
+    "variant": "VaRiANTS__mUltIPLE___SOmE____OTher_____fiNAL"
+  }
+]

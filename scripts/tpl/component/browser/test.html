@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Test to load and run a LOCAL Dilla design system with WASM #TYPE#, https://dilla.io -->
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dilla #TYPE# - TEST - #DS# v#VERSION#</title>
+  </head>
+
+  <body>
+    <div id="test_mySidebar">
+      <span id="test_close">&lt;</span>
+      <div class="test_inner">
+        <select name="test_examples" id="test_examples">
+          <option>- Select -</option>
+        </select>
+        <input id="test_save" type="button" value="Save" />
+        <input id="test_reset" type="button" value="Reset" />
+        <div id="test_jsoneditor" style="height: 400px; padding-top: 10px;"></div>
+        <p>Dilla #TYPE# - TEST - #DS# v#VERSION#</p>
+      </div>
+    </div>
+    <div id="test_container">
+      <div id="dilla"></div>
+    </div>
+    <script type="importmap">
+      {
+        "imports": {
+          "@bytecodealliance/preview2-shim/cli": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/cli.js",
+          "@bytecodealliance/preview2-shim/filesystem": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/filesystem.js",
+          "@bytecodealliance/preview2-shim/io": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/io.js",
+          "@bytecodealliance/preview2-shim/random": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/random.js"
+        }
+      }
+    </script>
+    <!-- Helper ro ease testing and init this page -->
+    <link rel="stylesheet" href="test.css" />
+    <script src="test.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.0/jsoneditor.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.0/jsoneditor.css" />
+  </body>
+</html>

@@ -1,0 +1,154 @@
+Template: test_filters.jinja
+-- set_attribute --
+--strange cases--
+class="foo bar"
+class="foo bar other bar some"
+["foo", "bar"]
+["foo", "bar"]="foo bar"
+class="foo bar some"
+class="foo bar some other"
+foo="bar"
+foo="bar"
+foo="other"
+--normal cases--
+foo="bar"
+href="/" id="foo"
+href="#bar"
+href="#bar"
+foo="bar" some="other"
+foo="replace" some="other"
+bar="foo" foo="bar" some="other"
+data-foo="bar"
+--ignored--
+!!??
+!!??
+--specials--
+#foo="bar"
+$="%"
+foo="bar"
+foo=""bar""
+foo="'bar'"
+--empty--
+foo
+bar foo
+foo
+foo
+bar foo
+--non string--
+foo="1"
+foo="1.11"
+foo="true"
+foo="false"
+true
+true="true"
+-- has_attribute --
+true
+true
+true
+true
+true
+true
+true
+true
+true
+~
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+false
+~
+true
+-- add_class --
+!!empty class=""!!
+class="bar"
+class="bar" data="test"
+class="bar foo"
+class="bar foo" data="test"
+class="bar foo" data="test"
+class="bar foo some" data="test"
+class="bar some foo" data="test"
+class="some foo bar" data="test"
+class="some other foo bar" data="test"
+class="c z a r 10 0"
+test
+test
+class="some" test="test"
+-- has_class --
+false
+false
+false
+false
+false
+false
+~
+true
+true
+true
+true
+true
+true
+true
+~
+false
+true
+-- remove_class --
+!!empty class=""!!
+class="bar"
+class="foo bar"
+!!empty class=""!!
+class="" data="foo"
+class="bar" data="foo"
+class="bar" data="foo"
+class=""
+-- filter_split --
+Mysplitstring
+Mysplitstring
+test-my
+test-split
+test-string
+-- filter_prepend --
+Someone
+prepend, foo, bar
+-- filter_append --
+Someone
+foo, bar, append
+-- filter_clean_id --
+id="a-b-c-d-e-f-g-h"
+-- remove_attribute --
+class="foo bar" data-array="foo bar" data-bool="true" data-bool-2="false" data-children="foo bar" data-float="45.33" data-float-neg="-45.33" data-map="foo bar" data-num="45" data-num-neg="-45" data-string="foo" id="foo" style="some other"
+class="foo bar" data-array="foo bar" data-bool="true" data-bool-2="false" data-children="foo bar" data-float="45.33" data-float-neg="-45.33" data-map="foo bar" data-num="45" data-num-neg="-45" data-string="foo" style="some other"
+style="some other" data-array="foo bar" data-bool="true" data-bool-2="false" data-children="foo bar" data-float="45.33" data-float-neg="-45.33" data-map="foo bar" data-num="45" data-num-neg="-45" data-string="foo"
+data-string="foo" data-array="foo bar" data-bool="true" data-bool-2="false" data-children="foo bar" data-float="45.33" data-float-neg="-45.33" data-map="foo bar" data-num="45" data-num-neg="-45"
+data-string="foo" data-array="foo bar" data-num-neg="-45" data-bool-2="false" data-children="foo bar" data-float="45.33" data-float-neg="-45.33" data-map="foo bar" data-num="45"
+data-string="foo" data-array="foo bar" data-num-neg="-45" data-num="45" data-children="foo bar" data-float="45.33" data-float-neg="-45.33" data-map="foo bar"
+data-string="foo" data-array="foo bar" data-num-neg="-45" data-map="foo bar" data-children="foo bar" data-float="45.33" data-float-neg="-45.33"
+data-string="foo" data-array="foo bar" data-float-neg="-45.33" data-map="foo bar" data-children="foo bar" data-float="45.33"
+data-string="foo" data-array="foo bar" data-float-neg="-45.33" data-map="foo bar" data-children="foo bar"
+data-string="foo" data-array="foo bar" data-children="foo bar" data-map="foo bar"
+data-map="foo bar" data-array="foo bar" data-children="foo bar"
+data-map="foo bar" data-children="foo bar"
+data-children="foo bar"
+data-children="foo bar" -- no change --
+--empty--
+-- Chained --
+--empty--
+-- merge --
+foo="bar" wu="tang"
+foo="baz"
+foo="alpha beta bar baz"
+foo="alpha beta bar"
+foo="bar alpha beta"
+foo="wu tang"

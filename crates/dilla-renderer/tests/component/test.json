@@ -1,0 +1,28 @@
+[
+  {
+    "@component": "test",
+    "label": "<span>Escape me!</span>"
+  },
+  {
+    "@component": "test",
+    "label": "foo",
+    "text": [
+      " bar ",
+      {
+        "@component": "test",
+        "label": "some",
+        "attributes": {
+          "data-some": "stuff"
+        }
+      }
+    ],
+    "attributes": {
+      "data-foo": "bar",
+      "class": [
+        "from",
+        "payload",
+        "bar"
+      ]
+    }
+  }
+]

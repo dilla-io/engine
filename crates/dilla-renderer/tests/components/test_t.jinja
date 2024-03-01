@@ -1,0 +1,21 @@
+{{ 'Hello' }}
+{{ 'Hello'|t }}
+{{ 'Hello'|t() }}
+{{ 'Hello @name!'|t({'@name': 'Bob'}) }}
+{{ 'Hello @name where is @other_name?'|t({'@name': 'Bob', '@other_name': 'john'}) }}
+{# Handle int, float and bool as string. #}
+{{ 'Your number is @num'|t({'@num': 0}) }}
+{{ 'Your number is @num'|t({'@num': 1}) }}
+{{ 'Your number is @num'|t({'@num': 10.32}) }}
+{{ 'Your number is @num'|t({'@num': -1}) }}
+{{ 'Your number is @num'|t({'@num': -10.32}) }}
+{{ 'Your number is @num'|t({'@num': true}) }}
+{{ 'Your number is @num'|t({'@num': false}) }}
+{# Process var if string #}
+{% set var = "Var" %}
+-- {{ var|t }} --
+{# Ignore wrong argument type #}
+{{ 'Hello @name!'|t([{'@name': 'Bob'}]) }}
+{{ 'Hello @name!'|t('Bob') }}
+{{ 'Hello @name!'|t(0) }}
+{{ 'Hello @name!'|t(true) }}

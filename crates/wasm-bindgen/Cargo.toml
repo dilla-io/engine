@@ -1,0 +1,42 @@
+[package]
+name = "wasm-bindgen"
+version = "1.0.0"
+description = "Dilla WASM with WASM-Bindgen"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs", "--html-in-header", "doc-header.html"]
+
+[features]
+default = ["describer"]
+describer = []
+prettify = []
+debug = []
+
+[lib]
+crate_type = ["cdylib"]
+
+[dependencies]
+dilla-renderer = { path = "../dilla-renderer", default-features = false }
+dilla-describer = { path = "../dilla-describer", default-features = false }
+gloo-utils = "0.2"
+instant = { version = "0.1", features = [ "wasm-bindgen", "inaccurate" ] }
+serde_json = { version = "1.0", default-features = false}
+wasm-bindgen = "0.2"
+# @todo see if we can use instead of serde_json?
+# serde-wasm-bindgen = "0.6"
+
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+console_error_panic_hook = { version = "0.1", optional = true }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"

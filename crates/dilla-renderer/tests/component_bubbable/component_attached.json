@@ -1,0 +1,66 @@
+[
+  {
+    "@attached": [
+      {
+        "@element": "meta",
+        "name": "GLOBAL-1"
+      },
+      {
+        "@element": "meta",
+        "name": "GLOBAL-2"
+      }
+    ]
+  },
+  {
+    "@component": "other",
+    "label": [
+      ["bar"],
+      {
+        "@component": "other",
+        "@variant": "variant",
+        "label": "bar",
+        "@attached": [
+          {
+            "@element": "meta",
+            "name": "component-field-1"
+          },
+          {
+            "@element": "meta",
+            "name": "component-field-2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "@component": "test",
+    "label": {
+      "@component": "test",
+      "label": "foo",
+      "@attached": {
+        "@element": "meta",
+        "name": "NESTED-1"
+      }
+    }
+  },
+  {
+    "@component": "test",
+    "label": "some",
+    "@attached": [
+      {
+        "@element": "meta",
+        "name": "component-1"
+      },
+      {
+        "@element": "meta",
+        "name": "component-2"
+      }
+    ]
+  },
+  {
+    "@attached": {
+      "@element": "meta",
+      "name": "GLOBAL-3"
+    }
+  }
+]

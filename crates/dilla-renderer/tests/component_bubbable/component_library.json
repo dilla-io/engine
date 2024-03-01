@@ -1,0 +1,59 @@
+{
+  "@component": "test",
+  "label": "foo",
+  "text": [
+    [
+      "then",
+      {
+        "@component": "other",
+        "label": "bar",
+        "@library": {
+          "css": {
+            "inside-array.css": {
+              "media": "screen"
+            }
+          },
+          "js": {
+            "inside-array.js": {
+              "async": true
+            }
+          }
+        }
+      }
+    ],
+    {
+      "@component": "test",
+      "label": "bar"
+    },
+    {
+      "@component": "test",
+      "label": "stuff"
+    },
+    {
+      "@library": {
+        "css": {
+          "inside.css": {
+            "media": "screen"
+          }
+        },
+        "js": {
+          "inside.js": {
+            "async": true
+          }
+        }
+      }
+    }
+  ],
+  "@library": {
+    "css": {
+      "foo.css": {
+        "media": "screen"
+      }
+    },
+    "js": {
+      "foo.js": {
+        "async": true
+      }
+    }
+  }
+}

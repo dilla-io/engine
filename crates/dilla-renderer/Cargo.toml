@@ -1,0 +1,46 @@
+[package]
+name = "dilla-renderer"
+version = "1.0.0"
+description = "Dilla renderer with MiniJinja template engine."
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+
+[features]
+default = []
+profiling = []
+debug = []
+
+[dependencies]
+cfg-if = "1.0"
+getrandom = { version = "0.2", default-features = false, features = ["js"] }
+indexmap = { version = "2.2", default-features = false, features = ["serde"] }
+minijinja = { version = "1.0", default-features = false, features = [
+  "builtins",
+  "macros",
+  "speedups",
+] }
+rand = { version = "0.8", default-features = false, features = [
+  "std",
+  "std_rng",
+] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0", default-features = false, features = [
+  "preserve_order",
+] }
+phf = { version = "0.11", features = ["macros"] }
+
+[build-dependencies]
+const-gen = "1.6"
+dotenv = "0.15"
+phf_codegen = "0.11"
+walkdir = "2.4"
+
+[dev-dependencies]
+assert-str = "0.1"
+similar-asserts = "1.5"
+walkdir = "2.4"

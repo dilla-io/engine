@@ -1,0 +1,20 @@
+Template: test_attribute.jinja
+class="foo" data-test="bar"
+class="foo" data-test="foo"
+class="foo" data-test="bar some"
+class="foo bar" style="color: red;"
+class="foo bar" style="color: red; border: 3px green;"
+class="foo"
+class="foo bar"
+-- complex attribute --
+aria-expanded="false" class="foo bar" data-bs-auto-close="false" data-bs-toggle="dropdown" id="foo"
+aria-expanded="false" class="foo bar other" data-bs-auto-close="false" data-bs-toggle="dropdown" href="#" id="foo"
+-- component --
+Template: test.jinja
+<div class="foo bar test template" data="test" data-array="arr1 arr2" data-bool="true" data-float="45.33" data-float-neg="-45.33" data-num="45" data-num-neg="-45" data-obj="k1 v1 k2 v2" data-str="lorem" style="border: 1px;">
+<span>foo</span>bar</div>
+-- method removeAttribute() --
+class="foo bar" data-bs-toggle="dropdown" id="foo" style="some other"
+class="foo bar" data-bs-toggle="dropdown" style="some other"
+style="some other" data-bs-toggle="dropdown"
+data-bs-toggle="dropdown"

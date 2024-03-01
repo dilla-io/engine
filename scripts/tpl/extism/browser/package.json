@@ -1,0 +1,14 @@
+{
+  "name": "@dilla-io/#DS#-extism-browser",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Jean Valverde <jean@dilla.io>",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://dilla.io",
+  "description": "Dilla WASM #type# Browser for #DS#",
+  "main": "index.html",
+  "module": "test.js",
+  "dependencies": {
+    "@extism/extism": "^1.0"
+  }
+}

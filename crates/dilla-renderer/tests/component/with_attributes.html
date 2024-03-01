@@ -1,0 +1,21 @@
+Template: test.jinja
+<div class="test template">
+<span>no</span>attributes</div>
+Template: test.jinja
+<div class="test template" foo="bar">
+<span>with</span>@attributes</div>
+Template: test.jinja
+<div class="test template" foo="bar">
+<span>with</span>attributes</div>
+Template: test.jinja
+<div class="test template" foo="bar">
+<span>with</span>@attributes and attributes</div>
+Template: test.jinja
+<div class="test template" foo="bar">
+<span>with</span>attributes and @attributes</div>
+Template: test.jinja
+<div class="foo bar test template" data-array="arr1 arr2" data-bool="true" data-float="45.33" data-float-neg="-45.33" data-num="45" data-num-neg="-45" data-obj="k1 v1 k2 v2" data-str="lorem" style="--var-1: #222; --var-2: #333;">
+<span>with</span>mixed types @attributes</div>
+Template: test.jinja
+<div class="test template">
+<span class="label_foo label_bar" data-array="label_arr1 label_arr2" data-bool="true" data-float="45.33" data-float-neg="-45.33" data-num="45" data-num-neg="-45" data-obj="label_k1 label_v1 label_k2 label_v2" data-str="label_lorem" style="--var-1: #label_222; --var-2: #label_333;">with</span>child attributes as label_attributes</div>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Simple base example to load and run a Dilla design system with WASM #TYPE# https://dilla.io -->
+
+  <head>
+    <link rel="icon" href="favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dilla #TYPE# #DS# v#VERSION#</title>
+  </head>
+
+  <body>
+    <div style="margin: 10px; padding: 10px;">
+      <div id="dilla"></div>
+    </div>
+    <script type="importmap">
+      {
+        "imports": {
+          "@bytecodealliance/preview2-shim/cli": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/cli.js",
+          "@bytecodealliance/preview2-shim/filesystem": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/filesystem.js",
+          "@bytecodealliance/preview2-shim/io": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/io.js",
+          "@bytecodealliance/preview2-shim/random": "./node_modules/@bytecodealliance/preview2-shim/lib/browser/random.js"
+        }
+      }
+    </script>
+    <script type="module">
+      const helper_js = '#DILLA_JS_HELPER_URL#'
+      const co_js = window.location.href.replace('/browser/', '/#DS#.mjs')
+
+      ;(async function () {
+        try {
+          const payload_file = await fetch(window.location.href.replace('/browser/', '/payload/index.json'))
+          let payload = await payload_file.json()
+
+          const dilla_co = await import(co_js)
+
+          if (typeof payload === 'object') {
+            payload = JSON.stringify(payload)
+          }
+
+          const time_start = Date.now()
+          let result = dilla_co.render(payload)
+          const duration = Date.now() - time_start
+
+          console.debug(`[Dilla #TYPE#] generated in ${duration}ms`)
+
+          result = JSON.parse(result)
+
+          const helper = await import(helper_js)
+          helper.insertDataInDom(result, { system_javascript: true, system_stylesheet: true })
+          document.getElementById('dilla').innerHTML = result.body
+        } catch (error) {
+          console.error(`[Dilla #TYPE#] Fail render`, error)
+        }
+      })()
+    </script>
+  </body>
+</html>

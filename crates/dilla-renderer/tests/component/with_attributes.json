@@ -1,0 +1,103 @@
+[
+  {
+    "@component": "test",
+    "label": "no",
+    "text": "attributes"
+  },
+  {
+    "@component": "test",
+    "label": "with",
+    "text": "@attributes",
+    "@attributes": {
+      "foo": "bar"
+    }
+  },
+  {
+    "@component": "test",
+    "label": "with",
+    "text": "attributes",
+    "attributes": {
+      "foo": "bar"
+    }
+  },
+  {
+    "@component": "test",
+    "label": "with",
+    "text": "@attributes and attributes",
+    "@attributes": {
+      "foo": "bar"
+    },
+    "attributes": {
+      "foo": "overridden"
+    }
+  },
+  {
+    "@component": "test",
+    "label": "with",
+    "text": "attributes and @attributes",
+    "attributes": {
+      "foo": "overridden"
+    },
+    "@attributes": {
+      "foo": "bar"
+    }
+  },
+  {
+    "@component": "test",
+    "label": "with",
+    "text": "mixed types @attributes",
+    "@attributes": {
+      "class": [
+        "foo",
+        "bar"
+      ],
+      "style": {
+        "--var-1:": "#222;",
+        "--var-2:": "#333;"
+      },
+      "data-array": [
+        "arr1",
+        "arr2"
+      ],
+      "data-obj": {
+        "k1": "v1",
+        "k2": "v2"
+      },
+      "data-str": "lorem",
+      "data-bool": true,
+      "data-num": 45,
+      "data-num-neg": -45,
+      "data-float": 45.33,
+      "data-float-neg": -45.33
+    }
+  },
+  {
+    "@component": "test",
+    "label": "with",
+    "text": "child attributes as label_attributes",
+    "label_attributes": {
+      "class": [
+        "label_foo",
+        "label_bar"
+      ],
+      "style": {
+        "--var-1:": "#label_222;",
+        "--var-2:": "#label_333;"
+      },
+      "data-array": [
+        "label_arr1",
+        "label_arr2"
+      ],
+      "data-obj": {
+        "label_k1": "label_v1",
+        "label_k2": "label_v2"
+      },
+      "data-str": "label_lorem",
+      "data-bool": true,
+      "data-num": 45,
+      "data-num-neg": -45,
+      "data-float": 45.33,
+      "data-float-neg": -45.33
+    }
+  }
+]

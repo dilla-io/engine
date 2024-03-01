@@ -1,0 +1,197 @@
+{# @see renderer/tests/filter/filters.html #}
+Template: test_filters.jinja
+-- set_attribute --
+--strange cases--
+{{ {'class': 'foo'}|set_attribute('class', 'bar') }}
+{{ {'class': ['foo', 'bar']}|set_attribute('class', ['other', 'bar', 'some']) }}
+{# Should we concatenate attribute name? #}
+{{ {}|set_attribute(['foo', 'bar']) }}
+{{ {}|set_attribute(['foo', 'bar'], ['foo', 'bar']) }}
+{{ {'class': 'foo bar'}|set_attribute('class', 'some') }}
+{{ {'class': 'foo bar'}|set_attribute('class', ['some', 'other']) }}
+{% set test_attributes = attributes %}
+{{ {}|set_attribute('foo', 'bar') }}
+{{ test_attributes|set_attribute('foo', 'bar') }}
+{# set_attribute will replace existing #}
+{{ test_attributes|set_attribute('foo', 'bar')|set_attribute('foo', 'other') }}
+--normal cases--
+{{ {}|set_attribute('foo', 'bar') }}
+{{ {'id': 'foo'}|set_attribute('href', '/') }}
+{{ {'href': '#foo'}|set_attribute('href', '#bar') }}
+{{ {'href': '#bar'}|set_attribute('href', '#bar') }}
+{{ {}|set_attribute('foo', 'bar')|set_attribute('some', 'other') }}
+{{ {}|set_attribute('foo', 'bar')|set_attribute('some', 'other')|set_attribute('foo', 'replace') }}
+{{ {}|set_attribute('foo', 'bar')|set_attribute('some', 'other')|set_attribute('bar', 'foo') }}
+{{ {}|set_attribute('data-foo', 'bar') }}
+--ignored--
+!!{{ ''|set_attribute('none', 'none') }}??
+!!{{ []|set_attribute('foo', 'bar') }}??
+--specials--
+{{ {}|set_attribute('#foo', 'bar') }}
+{{ {}|set_attribute('$', '%') }}
+{{ {}|set_attribute('foo', "bar") }}
+{{ {}|set_attribute('foo', '"bar"') }}
+{{ {}|set_attribute('foo', '\'bar\'') }}
+--empty--
+{{ {}|set_attribute('foo') }}
+{{ {}|set_attribute('foo')|set_attribute('bar') }}
+{{ {}|set_attribute('foo', '') }}
+{{ {}|set_attribute('foo', "") }}
+{{ {}|set_attribute('foo', '')|set_attribute('bar', '') }}
+--non string--
+{{ {}|set_attribute('foo', 1) }}
+{{ {}|set_attribute('foo', 1.11) }}
+{{ {}|set_attribute('foo', true) }}
+{{ {}|set_attribute('foo', false) }}
+{{ {}|set_attribute(true) }}
+{{ {}|set_attribute(true, true) }}
+-- has_attribute --
+{{ {'data': 'test'}|has_attribute('data') }}
+{{ {'data': 'test', 'class': 'bar'}|has_attribute('data') }}
+{{ {'class': 'bar', 'data': 'test'}|has_attribute('data') }}
+{{ {'class': 'bar', 'data': 'test'}|has_attribute('class') }}
+{{ {'class': 'bar', 'data space': 'test'}|has_attribute('data space') }}
+{{ {'class': 'bar', true: 'test'}|has_attribute(true) }}
+{{ {'class': 'bar', false: 'test'}|has_attribute(false) }}
+{{ {'class': 'bar', 1: 'test'}|has_attribute(1) }}
+{{ {'class': 'bar', 10.11: 'test'}|has_attribute(10.11) }}
+~
+{{ ''|has_attribute('') }}
+{{ []|has_attribute('') }}
+{{ 1|has_attribute('') }}
+{{ 10.11|has_attribute('') }}
+{{ true|has_attribute('') }}
+{{ false|has_attribute('') }}
+{{ {}|has_attribute('') }}
+{{ {}|has_attribute([]) }}
+{{ {'data': 'test'}|has_attribute(['data']) }}
+{{ {}|has_attribute(true) }}
+{{ {}|has_attribute(1) }}
+{{ {'class': 'bar', '1': 'test'}|has_attribute(1) }}
+{{ {'data': 'test'}|has_attribute('') }}
+{{ {'data': 'test'}|has_attribute('none') }}
+{{ {'data': 'test', 'class': 'bar'}|has_attribute('none') }}
+{{ {'class': 'bar', 'data': 'test'}|has_attribute('none') }}
+{{ {'class': 'bar', 'data': 'test'}|has_attribute('none') }}
+~
+{{ attributes|add_class('btn')|set_attribute('data')|has_attribute('data') }}
+-- add_class --
+!!empty{{ {}|add_class('') }}!!
+{{ {}|add_class('bar') }}
+{{ {'data': 'test'}|add_class('bar') }}
+{{ {}|add_class('bar')|add_class('foo') }}
+{{ {'data': 'test'}|add_class('bar')|add_class('foo') }}
+{{ {'data': 'test', 'class': 'bar'}|add_class('foo') }}
+{{ {'data': 'test', 'class': 'bar'}|add_class('foo')|add_class('some') }}
+{{ {'data': 'test', 'class': ['bar', 'some']}|add_class('foo') }}
+{{ {'data': 'test', 'class': 'some'}|add_class(['foo', 'bar']) }}
+{{ {'data': 'test', 'class': ['some', 'other']}|add_class(['foo', 'bar']) }}
+{{ {}|add_class(['c', 'z', 'a', 'r', 10, 0]) }}
+{{ "test"|add_class('some') }}
+{{ ["test"]|add_class('some') }}
+{{ {"test":"test"}|add_class('some') }}
+-- has_class --
+{{ {}|has_class('') }}
+{{ {}|has_class(1) }}
+{{ {}|has_class(true) }}
+{{ {}|has_class('bar') }}
+{{ {'class': 'foo'}|has_class('bar') }}
+{{ {'class': ['foo', 'bar']}|has_class('some') }}
+~
+{{ {'class': 'foo'}|has_class('foo') }}
+{{ {'class': '1'}|has_class('1') }}
+{{ {'class': 'true'}|has_class('true') }}
+{{ {'class': ['foo', 'bar']}|has_class('foo') }}
+{{ {'class': ['bar', 'foo']}|has_class('foo') }}
+{{ {'data': 'test', 'class': 'foo'}|has_class('foo') }}
+{{ {'data': 'test', 'class': ['foo', 'bar']}|has_class('foo') }}
+~
+{{ attributes|add_class('some')|has_class('new') }}
+{{ attributes|add_class('new')|has_class('new') }}
+-- remove_class --
+!!empty{{ {'class': 'foo'}|remove_class('foo') }}!!
+{{ {'class': ['foo', 'bar']}|remove_class('foo') }}
+{{ {'class': ['foo', 'bar']}|remove_class('some') }}
+!!empty{{ {'class': ['foo', 'bar']}|remove_class('foo')|remove_class('bar') }}!!
+{{ {'data': 'foo', 'class': 'foo'}|remove_class('foo') }}
+{{ {'data': 'foo', 'class': 'bar'}|remove_class('foo') }}
+{{ {'data': 'foo', 'class': ['foo', 'bar']}|remove_class('foo') }}
+{% set test_attrs = create_attribute({'class': 'foo'}) %}
+{{ test_attrs|remove_class('foo') }}
+-- filter_split --
+{{ 'My__split__string'|split('__') }}
+{{ 'My#split#string'|split('#') }}
+{% set variants = 'My__split__string'|split('__') %}
+{% for variant in variants %}
+  {{ 'test-' ~ variant|lower|replace('_', '-') }}
+{% endfor %}
+-- filter_prepend --
+{{ 'one'|prepend('Some') }}
+{% set foo = ['foo', 'bar']|prepend('prepend') %}
+{{ foo|join(', ') }}
+-- filter_append --
+{{ 'Some'|append('one') }}
+{% set foo = ['foo', 'bar']|append('append') %}
+{{ foo|join(', ') }}
+-- filter_clean_id --
+id="{{ "A B_c-d[e]f  %$*#€  éèà G____H"|clean_id }}"
+-- remove_attribute --
+{% set test_m = {
+  'class': ['foo', 'bar'],
+  'style': ['some', 'other'],
+  'id': 'foo',
+  'data-bool': true,
+  'data-bool-2': false,
+  'data-num': 45,
+  'data-num-neg': -45,
+  'data-float': 45.33,
+  'data-float-neg': -45.33,
+  'data-string': 'foo',
+  'data-array': ['foo', 'bar'],
+  'data-map': {'foo': 'bar'},
+  'data-children': {'foo': 'bar'}
+} %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('id') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('class') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('style') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-bool') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-bool-2') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-num') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-num-neg') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-float') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-float-neg') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-string') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-array') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('data-map') %}
+{{ test_m }}
+{% set test_m = test_m|remove_attribute('unknown') %}
+{{ test_m }} -- no change --
+{% set test_m = test_m|remove_attribute('data-children') %}
+--empty{{ test_m }}--
+-- Chained --
+{% set test_m = {
+  'class': ['foo', 'bar'],
+  'style': ['some', 'other'],
+  'id': 'foo',
+} %}
+{% set test_m = test_m|remove_attribute('id')|remove_attribute('class')|remove_attribute('style') %}
+--empty{{ test_m }}--
+-- merge --
+{{ { "foo": "bar" }|merge({"wu": "tang"}) }}
+{{ { "foo": "bar" }|merge({"foo": "baz"}) }}
+{{ { "foo": ["bar", "baz"] }|merge({"foo": ["alpha", "beta"]}) }}
+{{ { "foo": "bar" }|merge({"foo": ["alpha", "beta"]}) }}
+{{ {"foo": ["alpha", "beta"]}|merge({ "foo": "bar" }) }}
+{{ { "foo": {"bar": "baz"} }|merge({ "foo": {"wu": "tang"} }) }}

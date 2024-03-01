@@ -1,0 +1,33 @@
+[package]
+name = "wasm-component"
+version = "1.0.0"
+description = "Dilla WASM Component Model (WASI)"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs", "--html-in-header", "doc-header.html"]
+
+[features]
+# default = ["describer", "prettify"]
+default = ["describer"]
+describer = []
+prettify = []
+debug = []
+
+[dependencies]
+dilla-renderer = { path = "../dilla-renderer", default-features = false }
+dilla-describer = { path = "../dilla-describer", default-features = false }
+wit-bindgen = { version = "^0.17.0", default-features = false, features = ["realloc"] }
+html-minifier = "5.0"
+serde_json = "^1.0"
+
+[package.metadata.component]
+package = "component:dilla-component"
+
+[package.metadata.component.dependencies]

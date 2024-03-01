@@ -1,0 +1,22 @@
+[
+  {
+    "@variables": {
+      ".test": {
+        "var-1": "overridden",
+        "var-1-do-not-exist": "do-not-exist"
+      }
+    }
+  },
+  {
+    "@element": "div",
+    "@content": {
+      "@element": "span",
+      "@content": "foo",
+      "@variables": {
+        ".test": {
+          "var-1": "orange"
+        }
+      }
+    }
+  }
+]

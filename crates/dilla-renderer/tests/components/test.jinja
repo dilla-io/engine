@@ -1,0 +1,5 @@
+Template: test.jinja
+<div{{ attributes|add_class(["test", "template"]) }}>
+  <span{{ label_attributes }}>{{- label -}}</span>
+  {{- text -}}
+</div>

@@ -1,0 +1,75 @@
+image: dillaio/docker
+
+variables:
+  VERSION: 1.0.0
+
+cache: &cache_rust
+  paths:
+    # https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
+    # - .cargo/
+    - .cargo/.crates.toml
+    - .cargo/.crates2.json
+    - .cargo/bin/
+    - .cargo/registry/index/
+    - .cargo/registry/cache/
+    - .cargo/git/db/
+    - target/
+
+stages:
+  - test
+  - doc
+
+test:
+  stage: test
+  cache: *cache_rust
+  script:
+    - RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests --no-fail-fast -- "test_all" --exact --nocapture
+    - RUST_BACKTRACE=0 DS=test cargo test --doc -p dilla-renderer -- --nocapture
+    # - cd crates/dilla-renderer && cargo tarpaulin --out Xml
+  # artifacts:
+  #   when: always
+  #   reports:
+  #     coverage_report:
+  #       coverage_format: cobertura
+  #       path: cobertura.xml
+  # coverage: '/\d+\.\d+% coverage, /'
+  # only:
+    # - merge_requests
+  # only:
+  #   changes:
+  #     - crates/dilla-renderer/*
+
+.lint:
+  stage: test
+  cache: *cache_rust
+  script:
+    - cargo fmt -- --check
+    # - cargo clippy --workspace --all-targets --all --fix --allow-dirty -- -D warnings -W clippy::all
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - crates/dilla-renderer/*
+        - crates/dilla-describer/*
+
+.audit:
+  stage: test
+  cache: *cache_rust
+  script:
+    - cargo audit
+  only:
+    - tags
+  except:
+    - branches
+
+pages:
+  stage: doc
+  script:
+    - RUSTC_BOOTSTRAP=1 RUSTDOCFLAGS="--cfg=docsrs --html-in-header doc-header.html --enable-index-page -Z unstable-options" cargo doc --no-deps --document-private-items
+    - cd $CI_PROJECT_DIR && mkdir -p public
+    - cd $CI_PROJECT_DIR && cp -r target/doc* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+  # when: manual

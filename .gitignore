@@ -1,0 +1,40 @@
+
+# Dynamic build ds file
+/crates/dilla-renderer/src/build/ds.rs
+
+# Dist folder, keep only files for package generation
+/dist/
+
+/scripts/bench/report
+
+# Dilla DS from third party
+/var/
+
+# Local tests and code
+/payload.*
+/tmp
+
+# Generic Rust
+target/
+debug/
+release/
+*.o
+.trunk
+.cargo
+Cargo.lock
+
+# Node
+node_modules
+package-lock.json
+pnpm-lock.yaml
+
+# PHP
+vendor
+composer.lock
+
+# Python
+.venv
+
+# Sensitive information
+.npmrc
+.env

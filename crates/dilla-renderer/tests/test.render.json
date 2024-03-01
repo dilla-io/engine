@@ -1,0 +1,64 @@
+{
+  "## Not used, keep for example of what's in build.rs": "### Comment",
+  "components_variant_template": {
+    "other": [
+      "variant"
+    ]
+  },
+  "variables": {
+    "var-1": "#111111",
+    "var-2": "#222222",
+    "var-3": "#333333",
+    "var-4": "#444444",
+    "var-5": "#555555"
+  },
+  "styles": [
+    "style-1",
+    "style-2",
+    "style-3",
+    "style-4",
+    "style-5"
+  ],
+  "### Single string, separate html elements with '\n'": "### Comment",
+  "default_libraries_js": {
+    "default-1.js": {
+      "async": true
+    },
+    "default-2.js": {
+      "crossorigin": "anonymous"
+    }
+  },
+  "libraries_js": {
+    "test/test.dependency": {
+      "test.dependency-1.js": {
+        "async": true
+      },
+      "test.dependency-2.js": {
+        "defer": true
+      }
+    }
+  },
+  "default_libraries_css_html": "<link type=\"text/css\" rel=\"stylesheet\" href=\"default-1.css\">",
+  "libraries_keys": [
+    "test/test.dependency"
+  ],
+  "libraries_css_html": "<link type=\"text/css\" rel=\"stylesheet\" href=\"test.dependency-1.css\">",
+  "components_library_dependencies": {
+    "test_with_library": [
+      "test/test.dependency"
+    ]
+  },
+  "components_library_css_html": "<link type=\"text/css\" rel=\"stylesheet\" href=\"comp-lib-1.css\">",
+  "components_library_js": {
+    "test_with_library": {
+      "js": {
+        "test_with_library-1.js": {
+          "async": true
+        },
+        "test_with_library-2.js": {
+          "async": true
+        }
+      }
+    }
+  }
+}

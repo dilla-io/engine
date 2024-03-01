@@ -1,0 +1,28 @@
+{% set test_attributes = {
+  "class": ["o" ],
+  "data": "o"
+} %}
+{{
+  {
+    "@component": "inside",
+    "attributes": attributes,
+    "expected_attributes": "class=\"inside\" data=\"inside\"",
+    "test_attributes": test_attributes,
+    "expected_test_attributes": "class=\"inside o\" data=\"inside\""
+  }
+}}
+{{
+  {
+    "@component": "inside",
+    "attributes": attributes|add_class('filter_o'),
+    "expected_attributes": "class=\"filter_o\"",
+    "test_attributes": test_attributes|add_class('filter_o'),
+    "expected_test_attributes": "class=\"filter_o o inside\" data=\"inside\""
+  }
+}}
+{{
+  {
+    "@component": "inside",
+    "attributes": attributes|add_class(['y', 'z']),
+  }
+}}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Simple base example to load and run a Dilla design system with WASM #TYPE#, https://dilla.io -->
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dilla #TYPE# #DS# v#VERSION#</title>
+  </head>
+
+  <body>
+    <div style="margin: 10px; padding: 10px;">
+      <div id="dilla"></div>
+    </div>
+    <script type="module">
+      ;(async function () {
+        const helper_js = '#DILLA_JS_HELPER_URL#'
+        const bg_js = window.location.href + '/#DS#.js'
+
+        try {
+          const payload_file = await fetch(window.location.href.replace('/index.html', '').replace('/browser/', '/payload/index.json'))
+          const payload = await payload_file.json()
+
+          const dilla_bg = await import(bg_js)
+          await dilla_bg.default()
+
+          const time_start = Date.now()
+          const result = dilla_bg.render(payload, false)
+          const duration = Date.now() - time_start
+
+          console.debug(`[Dilla #TYPE#] generated in ${duration}ms`)
+
+          const helper = await import(helper_js)
+          helper.insertDataInDom(result, { system_javascript: true, system_stylesheet: true })
+          document.getElementById('dilla').innerHTML = result.body
+        } catch (error) {
+          console.error(`[Dilla #TYPE#] Fail render`, error)
+        }
+      })()
+    </script>
+  </body>
+</html>

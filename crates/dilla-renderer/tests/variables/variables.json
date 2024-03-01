@@ -1,0 +1,47 @@
+[
+  {
+    "@variables": {
+      ".test": {
+        "var-1": "overridden",
+        "var-1-do-not-exist": "do-not-exist"
+      }
+    }
+  },
+  [
+    {
+      "@variables": {
+        ".test": {
+          "var-1": "overridden again"
+        }
+      }
+    }
+  ],
+  {
+    "@element": "div",
+    "@content": {
+      "@element": "span",
+      "@content": {
+        "@element": "div",
+        "@content": {
+          "@element": "span",
+          "@content": "foo",
+          "@variables": {
+            ".test": {
+              "var-1": "inside is overridden"
+            }
+          }
+        }
+      },
+      "@variables": {
+        ".test": {
+          "var-1": "inside"
+        }
+      }
+    },
+    "@variables": {
+      ".test": {
+        "var-1": "outside"
+      }
+    }
+  }
+]

@@ -1,0 +1,66 @@
+Template: test_attribute.jinja
+{{ {'class': 'foo', 'data-test': 'bar'} }}
+{{ {'class': 'foo', 'data-test': 'bar', 'data-test': 'foo'} }}
+{{ {'class': 'foo', 'data-test': ['bar', 'some']} }}
+{{ {'class': ['foo', 'bar'], 'style': 'color: red;'} }}
+{{ {'class': ['foo', 'bar'], 'style': ['color: red;', 'border: 3px green;']} }}
+{% set test = {'class': 'foo'} %}
+{{ test }}
+{{
+  {
+    'class': ['foo', 'bar']
+  }
+}}
+-- complex attribute --
+{% set classes = ['foo', 'bar'] %}
+{% set id = 'foo' %}
+{% set auto_close = 'false' %}
+{% set test = {
+  'class': classes,
+  'id': id,
+  'data-bs-toggle': 'dropdown',
+  'data-bs-auto-close': auto_close,
+  'aria-expanded': 'false'
+} %}
+{{ test }}
+{% set test2 = test|set_attribute("href", "#")|add_class('other') %}
+{{ test2 }}
+-- component --
+{{
+  {
+    "@component": "test",
+    "label": 'foo',
+    "text": 'bar',
+    "attributes": {
+      'class': ['foo', 'bar'],
+      'style': 'border: 1px;',
+      'data': 'test',
+      'data-array': ['arr1', 'arr2'],
+      'data-obj': {'k1': 'v1', 'k2': 'v2'},
+      'data-str': 'lorem',
+      'data-bool': true,
+      'data-num': 45,
+      'data-num-neg': -45,
+      'data-float': 45.33,
+      'data-float-neg': -45.33
+    }
+  }
+}}
+-- method removeAttribute() --
+{% set test_m = create_attribute({
+  'class': ['foo', 'bar'],
+  'style': ['some', 'other'],
+  'id': 'foo',
+  'data-bs-toggle': 'dropdown'
+}) %}
+{{ test_m }}
+{% set test_m = test_m.removeAttribute('id') %}
+{{ test_m }}
+{% set test_m = test_m.removeAttribute('class') %}
+{{ test_m }}
+{% set test_m = test_m.removeAttribute('style') %}
+{{ test_m }}
+{% set test_m = test_m.removeAttribute('data-bs-toggle') %}
+{{ test_m }}
+{% set test_m = test_m.removeAttribute('unknown') %}
+{{ test_m }}

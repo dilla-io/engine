@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Simple base example to load and run a Dilla design system with WASM #TYPE#, https://dilla.io -->
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dilla #TYPE# #DS# v#VERSION#</title>
+  </head>
+
+  <body>
+    <div style="margin: 10px; padding: 10px;">
+      <div id="dilla"></div>
+    </div>
+    <script type="module">
+      import createPlugin from './node_modules/@extism/extism/dist/browser/mod.js'
+
+      const helper_js = '#DILLA_JS_HELPER_URL#'
+      const wasm_url = window.location.href.replace('/browser/', '/#DS#.wasm')
+
+      ;(async function () {
+        try {
+          const payload_file = await fetch(window.location.href.replace('/browser/', '/payload/index.json'))
+          let payload = await payload_file.json()
+
+          const plugin = await createPlugin(wasm_url, {
+            useWasi: true,
+          })
+
+          payload = JSON.stringify(payload)
+
+          const time_start = Date.now()
+          const req = await plugin.call('render', new TextEncoder().encode(payload))
+          const duration = Date.now() - time_start
+
+          console.debug(`[Dilla #TYPE#] generated in ${duration}ms`)
+
+          let result = new TextDecoder().decode(req.buffer)
+          result = JSON.parse(result)
+
+          await plugin.close()
+
+          const helper = await import(helper_js)
+          helper.insertDataInDom(result, { system_javascript: true, system_stylesheet: true })
+          document.getElementById('dilla').innerHTML = result.body
+        } catch (error) {
+          console.error(`[Dilla #TYPE#] Fail render`, error)
+        }
+      })()
+    </script>
+  </body>
+</html>

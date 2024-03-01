@@ -1,0 +1,69 @@
+body {
+  padding-top: 0;
+  margin: 10px;
+}
+
+#test_form {
+  margin: 0;
+  padding: 0;
+}
+
+#test_container {
+  margin-left: 400px;
+}
+
+#test_mySidebar {
+  height: 100%;
+  width: 400px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(248, 249, 250);
+  overflow-x: hidden;
+  padding-top: 10px;
+  border-right: 1px solid #6b6b6b;
+}
+
+#test_mySidebar .test_inner {
+  padding: 0 10px;
+}
+
+#test_mySidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: rgb(82, 91, 100);
+  display: block;
+}
+
+#test_mySidebar a:hover {
+  color: #cacaca;
+}
+
+#test_close:hover {
+  cursor: pointer;
+}
+
+#test_mySidebar #test_close {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  font-size: 32px;
+  /* font-weight: bold; */
+  padding: 0;
+}
+
+#test_mySidebar.test_closed .test_inner {
+  display: none;
+}
+
+#test_mySidebar.test_closed #test_close {
+  top: 0;
+  right: 0;
+}
+
+#test_examples {
+  border: 1px solid #cacaca !important;
+  max-width: 95%
+}

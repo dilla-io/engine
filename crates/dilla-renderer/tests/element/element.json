@@ -1,0 +1,80 @@
+[
+  {
+    "@element": "code",
+    "@content": "<span>Escape me!</span>"
+  },
+  {
+    "@element": "code",
+    "@content": "<span>Escape url: http://some.com !</span>"
+  },
+  {
+    "@element": "div",
+    "id": "intro",
+    "class": [
+      "title",
+      "xl"
+    ],
+    "@content": [
+      "Content as ",
+      {
+        "@element": "a",
+        "href": "http://foo.org",
+        "data-href": "href",
+        "@content": [
+          {
+            "@element": "span",
+            "@content": {
+              "@element": "strong",
+              "@content": "foo ",
+              "data-bar": "bar"
+            }
+          },
+          {
+            "@element": "span",
+            "@content": "bar ",
+            "data-foo": "foo"
+          },
+          "&& "
+        ]
+      },
+      "with ",
+      "like ",
+      {
+        "@element": "p",
+        "class": "bold",
+        "@content": {
+          "@element": "span",
+          "data-strong": "strong",
+          "@content": [
+            "inside ",
+            {
+              "@element": "em",
+              "@content": "and more",
+              "data-em": "em"
+            }
+          ]
+        }
+      },
+      true,
+      42,
+      42.42424242,
+      -42,
+      -42.42424242
+    ]
+  },
+  {
+    "@element": "span",
+    "@content": "Test attributes types",
+    "class": ["foo", "bar"],
+    "style": "border: 1px;",
+    "data": "test",
+    "data-array": ["arr1", "arr2"],
+    "data-obj": {"k1": "v1", "k2": "v2"},
+    "data-str": "lorem",
+    "data-bool": true,
+    "data-num": 45,
+    "data-num-neg": -45,
+    "data-float": 45.33,
+    "data-float-neg": -45.33
+  }
+]

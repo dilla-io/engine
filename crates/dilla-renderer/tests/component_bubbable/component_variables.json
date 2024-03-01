@@ -1,0 +1,22 @@
+{
+  "@component": "test",
+  "label": "LABEL",
+  "text": [
+    " MY ",
+    {
+      "@component": "test",
+      "label": "some",
+      "attributes": {
+        "data-some": "stuff"
+      },
+      "@local_variables": {
+        "var-1": "#222222"
+      },
+      "@variables": {
+        ":root": {
+          "var-2": "SUB-SUB-ROOT"
+        }
+      }
+    }
+  ]
+}

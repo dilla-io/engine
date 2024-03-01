@@ -1,0 +1,88 @@
+[
+  {
+    "@element": "elem-1"
+  },
+  {
+    "@element": "elem-2",
+    "@content": "foo1"
+  },
+  {
+    "@element": "elem-3",
+    "@content": {
+      "@element": "elem-4",
+      "@content": "foo2"
+    }
+  },
+  {
+    "@element": "elem-5",
+    "@content": [
+      {
+        "@element": "elem-6",
+        "@content": "foo3"
+      },
+      {
+        "@element": "elem-7",
+        "@content": "foo4"
+      }
+    ]
+  },
+  {
+    "@element": "elem-8",
+    "@content": {
+      "@element": "elem-9",
+      "@content": {
+        "@element": "elem-10",
+        "@content": {
+          "@element": "elem-11",
+          "@content": {
+            "@element": "elem-12",
+            "@content": "foo5"
+          }
+        }
+      }
+    }
+  },
+  {
+    "@element": "elem-13",
+    "@content": [
+      {
+        "@element": "elem-14",
+        "@content": [
+          {
+            "@element": "elem-15",
+            "@content": [
+              {
+                "@element": "elem-16",
+                "@content": [
+                  {
+                    "@element": "elem-17",
+                    "@content": "foo6"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@element": "elem-18",
+        "@content": [
+          {
+            "@element": "elem-19",
+            "@content": [
+              {
+                "@element": "elem-20",
+                "@content": [
+                  {
+                    "@element": "elem-21",
+                    "@content": "foo7"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

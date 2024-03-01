@@ -1,0 +1,92 @@
+[
+  {
+    "@attached": [
+      {
+        "@element": "link",
+        "href": "?page=2",
+        "rel": "next"
+      },
+      {
+        "@element": "base",
+        "target": "_blank"
+      },
+      {
+        "@element": "meta",
+        "name": "GLOBAL-1"
+      },
+      {
+        "@element": "meta",
+        "name": "GLOBAL-2"
+      }
+    ]
+  },
+  {
+    "@element": "empty"
+  },
+  {
+    "@element": "span",
+    "@content": "foo",
+    "@attached": [
+      {
+        "@element": "meta",
+        "name": "ELEMENT-1"
+      },
+      {
+        "@element": "meta",
+        "name": "ELEMENT-2"
+      }
+    ]
+  },
+  {
+    "@element": "span",
+    "@content": {
+      "@element": "em",
+      "@content": "foo",
+      "@attached": {
+        "@element": "meta",
+        "name": "NESTED-1"
+      }
+    }
+  },
+  {
+    "@element": "em",
+    "@content": {
+      "@element": "span",
+      "@content": "bar",
+      "@attached": {
+        "@element": "meta",
+        "name": "NESTED-2"
+      }
+    }
+  },
+  {
+    "@element": "em",
+    "@content": [
+      "foo",
+      {
+        "@element": "span",
+        "@content": "bar",
+        "@attached": {
+          "@element": "meta",
+          "name": "NESTED-3"
+        }
+      }
+    ],
+    "@attached": [
+      {
+        "@element": "meta",
+        "name": "ELEMENT-3"
+      },
+      {
+        "@element": "meta",
+        "name": "ELEMENT-4"
+      }
+    ]
+  },
+  {
+    "@attached": {
+      "@element": "meta",
+      "name": "GLOBAL-3"
+    }
+  }
+]

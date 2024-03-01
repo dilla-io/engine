@@ -1,0 +1,16 @@
+{# {{ image }} #}
+{# {{ { "@element": "p" }|add_class("foo") }} #}
+{# {{ image }} #}
+{# {{ image|add_class("inside") }} #}
+{# {{ other1 }} #}
+{# {{ other1|add_class("inside") }} #}
+{# {{ other2|add_class("inside") }}
+{{ other3|add_class("inside") }}
+{{ other4|add_class("inside") }}
+{{ other5|add_class("inside") }}
+{{ other6|add_class("inside") }}
+{{ other7|add_class("inside") }} #}
+{{ "test"|add_class('some') }}
+{{ ["test"]|add_class('some') }}
+{{ ["test1", "test2"]|add_class('some') }}
+{{ {"test":"test"}|add_class('some') }}

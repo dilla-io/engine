@@ -1,0 +1,25 @@
+{
+  "name": "@dilla-io/#DS#-component-browser",
+  "version": "#VERSION#",
+  "private": true,
+  "author": "Jean Valverde <jean@dilla.io>",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://dilla.io",
+  "description": "Dilla WASM #TYPE# for #DS#",
+  "main": "index.js",
+  "module": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/dilla-io/engine.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/dilla-io/engine/issues"
+  },
+  "publishConfig": {
+    "registry": "https://gitlab.com/api/v4/projects/#DILLA_PROJECT_ID#/packages/npm/",
+    "tag": "latest"
+  },
+  "dependencies": {
+    "@bytecodealliance/jco": "^1.0"
+  }
+}

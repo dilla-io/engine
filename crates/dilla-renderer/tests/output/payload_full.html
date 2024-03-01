@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="?page=2" rel="next" />
+<base target="_blank" />
+<meta name="GLOBAL-1" />
+<meta name="GLOBAL-2" />
+<meta name="ELEMENT-1" />
+<meta name="ELEMENT-2" />
+<meta name="NESTED-1" />
+<meta name="NESTED-2" />
+<meta name="NESTED-3" />
+<meta name="ELEMENT-3" />
+<meta name="ELEMENT-4" />
+<meta name="GLOBAL-3" />
+<link type="text/css" rel="stylesheet" href="default-1.css" crossorigin="anonymous">
+<link type="text/css" rel="stylesheet" href="default-2.css" crossorigin="anonymous">
+<link type="text/css" rel="stylesheet" href="test.dependency-1.css" media="screen">
+<link type="text/css" rel="stylesheet" href="test.dependency-2.css" crossorigin="anonymous">
+<link type="text/css" rel="stylesheet" href="test.dependency-payload.css">
+<link type="text/css" rel="stylesheet" href="inside.css" media="screen" />
+<link type="text/css" rel="stylesheet" href="foo.css" media="screen" />
+<link type="text/css" rel="stylesheet" href="parent.css" media="screen" />
+<style>
+.sidebar {
+--var-1: SUB-SUB-SIDEBAR;
+}
+</style>
+</head>
+<body>
+<empty></empty>
+<span>foo</span>
+<span>
+<em>foo</em></span>
+<em>
+<span>bar</span></em>
+<em>foo
+<span>bar</span></em>
+<h2>
+<div>foo
+<span>bar</span></div></h2>
+<h2>
+<div>foo
+<span>bar</span></div></h2>
+<div>
+<span>foo</span></div>
+<script src="default-1.js" async="true"></script>
+<script src="default-2.js" async="true"></script>
+<script src="test.dependency-1.js" async="true"></script>
+<script src="test.dependency-2.js" defer="true"></script>
+<script src="test.dependency-payload.js" async="true"></script>
+<script src="inside.js" defer="true"></script>
+<script src="foo.js" defer="true"></script>
+<script src="parent.js" defer="true"></script>
+</body>
+</html>

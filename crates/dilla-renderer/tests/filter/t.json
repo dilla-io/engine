@@ -1,0 +1,19 @@
+[
+  {
+    "@component": "test_t",
+    "@trans": {
+      "Var": "Variable",
+      "Hello": "Bonjour",
+      "Hello @name!": "Bonjour @name!",
+      "Your number is @num": "Votre nombre est @num",
+      "Hello @name where is @other_name?": "Bonjour @name où est @other_name?"
+    }
+  },
+  {
+    "@template": "{{ 'Hi'|t }}\n{{ 'Hi @name!'|t({'@name': 'John'}) }}",
+    "@trans": {
+      "Hi": "Bonjour",
+      "Hi @name!": "Bonjour @name!"
+    }
+  }
+]

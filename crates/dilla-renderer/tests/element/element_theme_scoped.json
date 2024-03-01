@@ -1,0 +1,22 @@
+[
+  {
+    "@element": "p",
+    "@styles": [
+      "style-1",
+      "style-2",
+      "style-3"
+    ],
+    "@content": "foo",
+    "@theme": "dark"
+  },
+  {
+    "@element": "p",
+    "@styles": [
+      "style-1",
+      "style-2",
+      "style-3"
+    ],
+    "@content": "foo",
+    "@theme": "dark-class"
+  }
+]

@@ -1,0 +1,181 @@
+[
+  "# filter add_class() on renderable @component",
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes",
+      "attributes": {
+        "data": "foo"
+      }
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes",
+      "attributes": {
+        "class": "foo",
+        "data": "foo"
+      }
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes",
+      "attributes": {
+        "class": [
+          "foo",
+          "bar"
+        ],
+        "data": "foo"
+      }
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes",
+      "@attributes": {
+        "data": "foo"
+      }
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes",
+      "@attributes": {
+        "class": "foo",
+        "data": "foo"
+      }
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@component": "attributes",
+      "@attributes": {
+        "class": [
+          "foo",
+          "bar"
+        ],
+        "data": "foo"
+      }
+    }
+  },
+  "# filter add_class() on renderable @element",
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@element": "p"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@element": "p",
+      "data": "foo"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@element": "p",
+      "class": "foo",
+      "data": "foo"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@element": "p",
+      "class": [
+        "foo",
+        "bar"
+      ],
+      "data": "foo"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable": [
+      {
+        "@element": "p",
+        "class": [
+          "foo",
+          "bar"
+        ],
+        "data": "foo"
+      }
+    ]
+  },
+  "# filter set_attribute() on renderable @element",
+  {
+    "@component": "test_filters_renderable",
+    "renderable_attr": {
+      "@element": "p"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable_attr": {
+      "@element": "p",
+      "data": "foo"
+    }
+  },
+  "# filter set_attribute() on renderable @component",
+  {
+    "@component": "test_filters_renderable",
+    "renderable_attr": {
+      "@component": "attributes",
+      "text": " - no attributes"
+    }
+  },
+  {
+    "@component": "test_filters_renderable",
+    "renderable_attr": {
+      "@component": "attributes",
+      "attributes": {
+        "class": [
+          "foo",
+          "bar"
+        ],
+        "data": "foo"
+      }
+    }
+  },
+  "# filter chained on renderable @component",
+  {
+    "@component": "test_filters_renderable",
+    "renderable_chained": {
+      "@component": "attributes",
+      "attributes": {
+        "class": [
+          "foo",
+          "bar"
+        ],
+        "data": "foo"
+      }
+    }
+  },
+  "# filter on undefined renderable",
+  {
+    "@component": "test_filters_renderable",
+    "test_undefined": true
+  },
+  "# filter on renderable @template",
+  {
+    "@component": "test_filters_renderable",
+    "renderable": {
+      "@template": "<span class=\"foo\">{{ test }}</span>",
+      "test": "foo"
+    }
+  }
+]

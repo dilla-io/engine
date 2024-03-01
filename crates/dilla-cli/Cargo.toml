@@ -1,0 +1,25 @@
+[package]
+name = "dilla-cli"
+version = "1.0.0"
+description = "CLI for Dilla Engine."
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+default-run = "dilla-cli"
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs", "--html-in-header", "doc-header.html"]
+
+[dependencies]
+dilla-renderer = { path = "../dilla-renderer", default-features = false }
+dilla-describer = { path = "../dilla-describer", default-features = false }
+html_parser = "0.7"
+html-minifier = "5.0"
+serde = "1.0"
+serde_json = "1.0"
+walkdir = "2.4"
+clap = { version = "4.4", features = ["derive", "env"] }
