@@ -153,7 +153,6 @@ __test() {
 
 __test_docker() {
   local _action=${1:-"run"}
-  docker login "${DILLA_DOCKER_REGISTRY}"
   docker pull "${DILLA_DOCKER_RUST}"
 
   mkdir -p "${_DILLA_ROOT_DIR}/.cargo"

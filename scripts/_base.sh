@@ -497,10 +497,10 @@ _post_build() {
   fi
 
   if [ ! -d "${_target}/node_modules" ] && [ -f "${_target}/package.json" ]; then
-    _log_debug "npm install -s"
+    _log_debug "npm install -s ${_target}"
     cd "${_target}" && npm install -s
   elif [ -d "${_target}/node_modules" ] && [ -f "${_target}/package.json" ]; then
-    _log_debug "npm update -s"
+    _log_debug "npm update -s ${_target}"
     cd "${_target}" && npm update -s
   fi
 }
@@ -648,7 +648,6 @@ _NO_OPTIMIZATION=
 _FEATURES=
 _PRINT_HELP=0
 _REPO=
-_SKIP_DOCKER_LOGIN=0
 _SKIP_DOCKER_PULL=0
 _TEST_OUTPUT="_test"
 _TEST_PATH="component"
@@ -720,9 +719,6 @@ while ((${#})); do
   --skip-pull)
     _SKIP_DOCKER_PULL=1
     ;;
-  --skip-login)
-    _SKIP_DOCKER_LOGIN=1
-    ;;
   --skip-check)
     _SKIP_CHECK_SCHEMAS=1
     ;;
@@ -731,7 +727,7 @@ while ((${#})); do
     shift
     ;;
   -f | --features)
-    _FEATURES="$(__get_option_value "${__arg}" "${__val-}")"
+    _FEATURES="-F $(__get_option_value "${__arg}" "${__val-}")"
     shift
     ;;
   --endopts)
@@ -799,6 +795,7 @@ _cp_ds() {
 _docker_run_build() {
   local __type=${1:-"bg"}
   local __opt='--is-docker'
+
   _prepare_docker
   _valid_ds
 
@@ -825,12 +822,6 @@ _docker_build_all() {
 
 _prepare_docker() {
 
-  if ((_SKIP_DOCKER_LOGIN)); then
-    _log_warn_light "[SKIP] Docker login!"
-  else
-    docker login "${DILLA_DOCKER_REGISTRY}"
-  fi
-
   if ((_SKIP_DOCKER_PULL)); then
     _log_warn_light "[SKIP] Docker pull!"
   else
@@ -847,10 +838,7 @@ _prepare_docker() {
     __opt+=' --no-optim'
   fi
   if ((_FEATURES)); then
-    __opt+=" --features $_FEATURES"
-  fi
-  if ((_SKIP_DOCKER_LOGIN)); then
-    __opt+=" --skip-login"
+    __opt+=" $_FEATURES"
   fi
   if ((_SKIP_DOCKER_PULL)); then
     __opt+=" --skip-pull"
@@ -868,7 +856,7 @@ _prepare_docker() {
 
 _docker_run_cmd() {
   local _cmd=${1:-"echo 'No commands for Docker!'"}
-  _log_notice "Docker run: ${_cmd}"
+  _log_notice "Docker run: ${_cmd} on ${DILLA_DOCKER_RUST}"
   docker run --rm -t \
     -u "$(id -u):$(id -g)" \
     -e CARGO_HOME=/app/.cargo \
@@ -976,7 +964,6 @@ _global_info() {
   echo -e " DILLA_LIB_FOLDER:\t\t${DILLA_LIB_FOLDER:-"-"}"
   echo -e " _TESTS_FOLDER:\t\t\t${_TESTS_FOLDER:-"-"}"
   echo -e " --"
-  echo -e " DILLA_DOCKER_REGISTRY:\t\t${DILLA_DOCKER_REGISTRY:-"-"}"
   echo -e " DILLA_DOCKER_RUST:\t\t${DILLA_DOCKER_RUST:-"-"}"
   echo -e " DILLA_DOCKER_SCHEMAS:\t\t${DILLA_DOCKER_SCHEMAS:-"-"}"
   echo -e " DILLA_DOCKER_PREBUILDER:\t${DILLA_DOCKER_PREBUILDER:-"-"}"

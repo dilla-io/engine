@@ -8,6 +8,13 @@ if ! command -v extism &>/dev/null; then
 fi
 
 _DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+echo -e "[Notice] Run 'version'"
+echo -e ""
+
+extism call --wasi "${_DIR}/w3c_1.wasm" version
+
+echo -e ""
 echo -e "[Notice] Run 'describe components::_list'"
 echo -e ""
 

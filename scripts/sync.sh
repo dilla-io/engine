@@ -28,7 +28,7 @@ Commands:
   ex_all           [extism] Send ALL DS Extism
   all_ds           Send all ds generated!
   all              Send all!
-  up_exp           [TMP] Run remote script /home/dilla/scripts/update_explorer.sh
+  up_exp           [TMP] Run remote script /home/debian/web/update_explorer.sh
   info | i         Get variables info used by this script
 
 Options:
@@ -135,7 +135,7 @@ _doc() {
 
 _up_exp() {
   _init
-  ssh -4 "${DILLA_SYNC_REMOTE}" bash -c "${DILLA_SYNC_REMOTE_ROOT}/scripts/update_explorer.sh"
+  ssh -4 "${DILLA_SYNC_REMOTE}" bash -c "${DILLA_SYNC_REMOTE_ROOT}/web/update_explorer.sh"
 }
 
 ###############################################################################

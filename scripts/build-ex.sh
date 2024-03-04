@@ -21,9 +21,13 @@ Argument:
 Commands:
   run              Build a single Design System WASM Extism
   all              Build all Design System WASM Extism
+  docker_run       Run build a single DS WASM Extism with a Docker image
+  docker_all       Run build WASM Extism with a Docker image
   info | i         Get variables info used by this script
 
 Options:
+  -f --features    Custom Cargo build features flag
+  --skip-pull      Skip Docker pull for run_docker* commands
   -v --verbose     Run script with more output
   -h --help        Display this help information
 
@@ -90,15 +94,15 @@ __build_wasm_extism() {
   _cp_ds
 
   _log_notice "Cargo build..."
-  _log_debug "DS=${DS} cargo build --target wasm32-wasi --release --no-default-features $_QUIET"
+  _log_debug "DS=${DS} cargo build -p wasm-extism --target wasm32-wasi -r --no-default-features $_FEATURES $_QUIET"
 
-  cd "${DILLA_WASM_EXTISM_LIB}" && DS=${DS} cargo build --target wasm32-wasi --release --no-default-features $_QUIET
+  DS=${DS} cargo build -p wasm-extism --target wasm32-wasi -r --no-default-features $_FEATURES $_QUIET
   cp -f "${__generated_wasm}" "${_DILLA_DS_TARGET}/${DS}.wasm"
 
   _log_notice "Cargo build DEV..."
-  _log_debug "DS=${DS} cargo build --target wasm32-wasi --release $_QUIET"
+  _log_debug "DS=${DS} cargo build -p wasm-extism --target wasm32-wasi -r $_FEATURES $_QUIET"
 
-  cd "${DILLA_WASM_EXTISM_LIB}" && DS=${DS} cargo build --target wasm32-wasi --release $_QUIET
+  DS=${DS} cargo build -p wasm-extism --target wasm32-wasi -r $_FEATURES $_QUIET
   cp -f "${__generated_wasm}" "${_DILLA_DS_TARGET}/${DS}_dev.wasm"
 
   if _blank "${_NO_OPTIMIZATION}"; then

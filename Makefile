@@ -27,7 +27,7 @@ ifndef DS
 	$(error [ERROR] DS is missing, ie: DS=w3c_1)
 endif
 	@./scripts/ds.sh clone_url $(DS) -r $(REPO) -v
-	@./scripts/pre_build.sh run $(DS) --skip-login --skip-check -v
+	@./scripts/pre_build.sh run $(DS) --skip-check -v
 	@./scripts/build-bg.sh docker_run $(DS) -v
 
 check: ## Check and validate the templates in prebuild step, must include DS=... as DS=w3c_1
@@ -40,19 +40,19 @@ build: ## Build WASM Bindgen for local Dilla ds, must include DS=... as DS=w3c_1
 ifndef DS
 	$(error [ERROR] DS is missing, ie: DS=w3c_1)
 endif
-	@./scripts/pre_build.sh run $(DS) --skip-login --skip-check --skip-pull -v
+	@./scripts/pre_build.sh run $(DS) --skip-check -v
 	@./scripts/build-bg.sh docker_run $(DS) -v
 
 build-component: ## Build WASM Component for local Dilla ds, must include DS=... as DS=w3c_1
 ifndef DS
 	$(error [ERROR] DS is missing, ie: DS=w3c_1)
 endif
-	@./scripts/pre_build.sh run $(DS) --skip-login --skip-check --skip-pull -v
+	@./scripts/pre_build.sh run $(DS) --skip-check -v
 	@./scripts/build-co.sh docker_run $(DS) -v
 
 build-extism: ## Build WASM Extism for local Dilla ds, must include DS=... as DS=w3c_1
 ifndef DS
 	$(error [ERROR] DS is missing, ie: DS=w3c_1)
 endif
-	@./scripts/pre_build.sh run $(DS) --skip-login --skip-check --skip-pull -v
+	@./scripts/pre_build.sh run $(DS) --skip-check -v
 	@./scripts/build-ex.sh docker_run $(DS) -v

@@ -22,10 +22,12 @@ Commands:
   run              Build a single Design System WASM Component
   all              Build all Design System WASM Component
   docker_run       Run build a single DS WASM Component with a Docker image
+  docker_all       Run build WASM Component with a Docker image
   info | i         Get variables info used by this script
 
 Options:
   -f --features    Custom Cargo build features flag
+  --skip-pull      Skip Docker pull for run_docker* commands
   --no-optim       Skip build optimization
   -v --verbose     Run script with more output
   -h --help        Display this help information
@@ -101,27 +103,21 @@ __build_wasm_component() {
   _cp_ds
 
   _log_debug "$(cargo component --version)"
-  _log_debug "DS=${DS} cargo component build --release --no-default-features --features $_FEATURES $_QUIET"
-  _log_debug "DS=${DS} cargo component build --release --no-default-features $_QUIET"
+  _log_debug "DS=${DS} cargo component build -p wasm-component -r --no-default-features $_FEATURES $_QUIET"
 
   _log_notice "Cargo build..."
-  if ! _blank "${_FEATURES}"; then
-    cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build --release --no-default-features --features $_FEATURES $_QUIET
-  else
-    cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build --release --no-default-features $_QUIET
-  fi
+  # cd to avoid bindings generation for all crates.
+  cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build -p wasm-component -r --no-default-features $_FEATURES $_QUIET
+
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}.wasm"
 
   _log_notice "Cargo build DEV..."
 
-  _log_debug "DS=${DS} cargo component build --release --features \"describer\" --features $_FEATURES $_QUIET"
-  _log_debug "cargo component build --release --features \"describer\" $_QUIET"
+  _log_debug "DS=${DS} cargo component build -p wasm-component -r -F \"describer\" $_FEATURES $_QUIET"
+  _log_debug "cargo component build -p wasm-component -r -F \"describer\" $_QUIET"
 
-  if ! _blank "${_FEATURES}"; then
-    cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build --release --features "describer" --features $_FEATURES $_QUIET
-  else
-    cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build --release --features "describer" $_QUIET
-  fi
+  cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build -p wasm-component -r -F "describer" $_FEATURES $_QUIET
+
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}_dev.wasm"
 }
 
@@ -184,7 +180,6 @@ _local_info() {
   echo -e " DILLA_DATA_FILE_SRC_TESTS:\t\t\t\t${DILLA_DATA_FILE_SRC_TESTS:-"-"}"
   echo -e " _DATA_FILE_SRC_EXAMPLES:\t\t\t${_DATA_FILE_SRC_EXAMPLES:-"-"}"
   echo -e " _DILLA_DS_TARGET:\t\t\t\t${_DILLA_DS_TARGET:-"-"}"
-  # echo -e " _DILLA_DS_ROOT:\t\t\t\t${_DILLA_DS_ROOT:-"-"}"
 }
 
 _local_check() {

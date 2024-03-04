@@ -26,7 +26,7 @@ Commands:
   info | i         Get variables info used by this script
 
 Options:
-  --skip-login     Skip Docker login for run_docker* commands
+  -f --features    Custom Cargo build features flag
   --skip-pull      Skip Docker pull for run_docker* commands
   --no-optim       Skip build optimization
   -v --verbose     Run script with more output
@@ -36,7 +36,7 @@ Usage:
   ${_ME} run [_DS_NAME_]
   ${_ME} all
   ${_ME} docker_run [_DS_NAME_]
-  ${_ME} docker_run [_DS_NAME_] --skip-login --skip-pull
+  ${_ME} docker_run [_DS_NAME_] --skip-pull
   ${_ME} docker_all
 HEREDOC
 }
@@ -45,7 +45,7 @@ HEREDOC
 # Specific script variables
 ###############################################################################
 
-__generated_wasm="${_DILLA_ROOT_DIR}/target/wasm32-unknown-unknown/release/wasm_bindgen.wasm"
+__generated_wasm="${_DILLA_ROOT_DIR}/target/wasm32-unknown-unknown/release/wasm_bindgen_dilla.wasm"
 
 ###############################################################################
 # Script functions
@@ -104,14 +104,14 @@ __build_wasm_wasm32() {
   __prepare_dir "${_DILLA_DS_TARGET}/wasm"
   _cp_ds
 
-  _log_debug "DS=${DS} cargo build --target wasm32-unknown-unknown --release --no-default-features $_QUIET"
+  _log_debug "DS=${DS} cargo build -p wasm-bindgen-dilla --target wasm32-unknown-unknown -r --no-default-features $_FEATURES $_QUIET"
 
   _log_notice "Cargo build..."
-  cd "${DILLA_WASM_BINDGEN_LIB}" && DS=${DS} cargo build --target wasm32-unknown-unknown --release --no-default-features --features "debug" $_QUIET
+  DS=${DS} cargo build -p wasm-bindgen-dilla --target wasm32-unknown-unknown -r --no-default-features -F "debug" $_FEATURES $_QUIET
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}.wasm"
 
   _log_notice "Cargo build DEV..."
-  cd "${DILLA_WASM_BINDGEN_LIB}" && DS=${DS} cargo build --target wasm32-unknown-unknown --release --features "describer" $_QUIET
+  DS=${DS} cargo build -p wasm-bindgen-dilla --target wasm32-unknown-unknown -r -F "describer" $_FEATURES $_QUIET
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}_dev.wasm"
 }
 
@@ -125,7 +125,7 @@ __build_wasm_bindgen() {
   _log_notice "wasm-bindgen: ${DS} in ${_DILLA_DS_TARGET}..."
 
   _log_debug "$(wasm-bindgen --version)"
-  _log_debug "DS=${DS} cargo build --target wasm32-unknown-unknown --release --no-default-features $_QUIET"
+  _log_debug "wasm-bindgen ${_DILLA_DS_TARGET}/wasm/${DS}.wasm --out-dir ${_DILLA_DS_TARGET}/browser --out-name ${DS} --target web $_opt"
 
   __prepare_dir "${_DILLA_DS_TARGET}/browser"
   wasm-bindgen "${_DILLA_DS_TARGET}/wasm/${DS}.wasm" --out-dir "${_DILLA_DS_TARGET}/browser" --out-name "${DS}" --target web $_opt
@@ -187,11 +187,6 @@ _local_info() {
   echo -e " _DILLA_DS_TARGET:\t\t\t\t${_DILLA_DS_TARGET:-"-"}"
   echo -e " _DILLA_DS_ROOT:\t\t\t\t${_DILLA_DS_ROOT:-"-"}"
   echo -e " --"
-  if ((_SKIP_DOCKER_LOGIN)); then
-    echo -e " _SKIP_DOCKER_LOGIN:\t\t\t\tTrue"
-  else
-    echo -e " _SKIP_DOCKER_LOGIN:\t\t\t\tFalse"
-  fi
   if ((_SKIP_DOCKER_PULL)); then
     echo -e " _SKIP_DOCKER_PULL:\t\t\t\tTrue"
   else

@@ -136,7 +136,7 @@ __run() {
 __pull_docker_images() {
   if [[ ${_SKIP_DOCKER_PULL} == 0 ]]; then
     _log_notice "Get Dilla Docker images..."
-    docker login "${DILLA_DOCKER_REGISTRY}"
+    docker pull --quiet "${DILLA_DOCKER_RUST}"
     docker pull --quiet "${DILLA_DOCKER_SCHEMAS}"
     docker pull --quiet "${DILLA_DOCKER_PREBUILDER}"
   else

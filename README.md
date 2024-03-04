@@ -1,12 +1,11 @@
 # Dilla Engine
 
 <div align="center">
-  <img src="https://data.dilla.io/dilla.png" alt="" width=320>
-  <p>Share your design systems in a tiny universal package. [https://dilla.io](https://dilla.io)</p>
+  <img src="https://data.dilla.io/dilla.png" alt="" width=320 />
+  <p>Share your design systems in a tiny universal package.</p>
 
 [![License](https://img.shields.io/badge/License%20-%20GPLv3%20-%20orange
 )](https://gitlab.com/dilla-io/engine/-/tree/master/LICENSE.md)
-![rustc 1.76.0](https://img.shields.io/badge/rust-1.76%2B-orange.svg)
 [![Documentation](https://img.shields.io/badge/Documentation%20-%20%233fb5e0
 )](https://doc.dilla.io/renderer/index.html)
 
@@ -69,9 +68,9 @@ To Build the wasm from a modified source in `./var/run_ds_src/_DS_NAME_`:
 make build DS=_DS_NAME_
 # Example:
 make build DS=bootstrap_5
-# Build component and extism versions:
-make build-component
-make build-extism
+# Build component and/or extism versions:
+make build-component DS=bootstrap_5
+make build-extism DS=bootstrap_5
 ```
 
 #### Validate the templates
@@ -83,24 +82,6 @@ make check DS=_DS_NAME_
 ### View and test created WASM
 
 You can run a local server from the `./dist/_DS_NAME_` folder created, then visit `bindgen/browser` or `component/browser`.
-
-Example of local server:
-
-```bash
-# Node
-npm install -g http-server
-# Cargo
-cargo install http-server
-```
-
-```bash
-# from dist/_DS_NAME_/
-http-server --help
-```
-
-Simply visit the test page:
-
-- http://127.0.0.1:8080/bindgen/browser/test.html
 
 ## Rust build
 
@@ -123,7 +104,7 @@ just install
 
 ### Build and run locally
 
-Payload is loaded from a file `./payload.json` by default for Just commands.
+Payload is loaded from a file `./payload.json` by default for **Just** commands.
 
 Design system used is by default _test_, as it's the only internal design system,
 other design systems must be set in `./var/run` folder and can be used setting a variable in the shell, ie:
