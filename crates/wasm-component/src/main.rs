@@ -15,7 +15,11 @@
 //! ---
 //!
 //! **Dilla WASM builder with WASM Component model.**
+#[allow(warnings)]
+mod bindings;
+
 use bindings::Guest;
+
 use dilla_renderer::render as dilla_render;
 use std::env;
 use std::fs;
@@ -29,11 +33,7 @@ use html_minifier::minify;
 #[cfg(feature = "prettify")]
 use serde_json::Value;
 
-mod bindings;
-
-#[cfg(feature = "debug")]
 use dilla_renderer::DESIGN_SYSTEM;
-#[cfg(feature = "debug")]
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 struct Component;
@@ -42,6 +42,10 @@ struct Component;
  * Specific implementation for wit-bindgen and bindings generation.
  */
 impl Guest for Component {
+    fn version() -> String {
+        version()
+    }
+
     fn render(payload: String) -> String {
         #[cfg(feature = "debug")]
         info("Guest");
@@ -71,6 +75,8 @@ impl Guest for Component {
     }
 }
 
+bindings::export!(Component with_types_in bindings);
+
 /**
  * Module will be used by Wasmtime or Node WASI runtime.
  */
@@ -87,11 +93,13 @@ fn main() {
                      for a DEV build:
                         describe: return a JSON response from the Dilla Describe API.
         <request>  - request to the function:
+                        'version': Get current version and Design System
                         'render'
                             - JSON payload file to load
                             - Optional flag to silence output (for benchmark)
                         'describe': Artefact and Id separated by '::', ie: `component::alert`
     EXAMPLES:
+        wasmtime MY_WASM.wasm version
         wasmtime MY_WASM.wasm render ./payload.json
         wasmtime MY_WASM.wasm render ./payload.json true
         wasmtime MY_WASM.wasm render_html ./payload.json
@@ -105,6 +113,12 @@ fn main() {
     println!("[DEBUG] {:?}", args);
 
     match args.len() {
+        2 => {
+            let result = dispatch(args[1].to_owned(), "".to_string(), "");
+            #[cfg(feature = "debug")]
+            info("Main");
+            println!("{}", result);
+        }
         3 => {
             let result = dispatch(args[1].to_owned(), args[2].to_owned(), "");
             #[cfg(feature = "debug")]
@@ -123,11 +137,24 @@ fn main() {
 
 fn dispatch(function: String, req: String, silent: &str) -> String {
     match function.as_str() {
+        "version" => version(),
         "render" => main_render(&req, silent),
         "render_html" => main_render_html(&req),
         "describe" => main_describe(&req),
         _ => format!("Unknown function: {}", function),
     }
+}
+
+fn version() -> String {
+    #[cfg(feature = "describer")]
+    return format!(
+        "[DEBUG] Dilla DEV Component v{VERSION} | ds: {}", DESIGN_SYSTEM
+    );
+
+    #[cfg(not(feature = "describer"))]
+    format!(
+        "[DEBUG] Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM
+    )
 }
 
 fn main_render(name: &str, silent: &str) -> String {

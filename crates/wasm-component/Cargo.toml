@@ -14,7 +14,6 @@ documentation.workspace = true
 rustdoc-args = ["--cfg", "docsrs", "--html-in-header", "doc-header.html"]
 
 [features]
-# default = ["describer", "prettify"]
 default = ["describer"]
 describer = []
 prettify = []
@@ -23,8 +22,9 @@ debug = []
 [dependencies]
 dilla-renderer = { path = "../dilla-renderer", default-features = false }
 dilla-describer = { path = "../dilla-describer", default-features = false }
-wit-bindgen = { version = "^0.17.0", default-features = false, features = ["realloc"] }
-html-minifier = "5.0"
+bitflags = "2.4.2"
+wit-bindgen-rt = "0.20.0"
+html-minifier = "^5.0"
 serde_json = "^1.0"
 
 [package.metadata.component]

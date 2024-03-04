@@ -1,6 +1,7 @@
 package component:wasm-component;
 
 world root {
+    export version: func() -> string;
     export render: func(payload: string) -> string;
     export render-html: func(payload: string) -> string;
     export describe: func(req: string) -> string;
