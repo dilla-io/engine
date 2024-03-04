@@ -34,8 +34,6 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[wasm_bindgen]
 extern "C" {
-    // #[wasm_bindgen(js_namespace = console)]
-    // fn log(s: &str);
     #[wasm_bindgen(js_namespace = console)]
     fn error(s: &str);
     #[wasm_bindgen(js_namespace = console)]
