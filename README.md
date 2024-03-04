@@ -1,23 +1,23 @@
 # Dilla Engine
 
 <div align="center">
-  <img src="https://data.dilla.io/dilla.png" alt="" width=320 />
+  <img src="https://data.dilla.io/dilla.png" alt="Dilla" width="300" />
   <p>Share your design systems in a tiny universal package.</p>
 
-[![License](https://img.shields.io/badge/License%20-%20GPLv3%20-%20orange
-)](https://gitlab.com/dilla-io/engine/-/tree/master/LICENSE.md)
-[![Documentation](https://img.shields.io/badge/Documentation%20-%20%233fb5e0
-)](https://doc.dilla.io/renderer/index.html)
+  <!-- ![Coverage](https://gitlab.com/dilla-io/engine/badges/master/coverage.svg?job=coverage) -->
+  [![Pipeline](https://gitlab.com/dilla-io/engine/badges/master/pipeline.svg?ignore_skipped=true)](https://gitlab.com/dilla-io/engine/-/pipelines)
+  [![License](https://img.shields.io/badge/License%20-%20GPLv3%20-%20orange)](https://gitlab.com/dilla-io/engine/-/tree/master/LICENSE.md)
+  [![Documentation](https://img.shields.io/badge/Documentation%20-%20%233fb5e0)](https://dilla.io/doc)
 
-Dilla is a fast but minimal WASM builder based on the syntax and behavior
-of the [Jinja2](https://jinja.palletsprojects.com/) implemented on top of
-[Minijinja](https://docs.rs/minijinja/latest/minijinja). The goal is to
-be able to pack your design system into a <strong>universal</strong>
-package, executable through a simple <strong>declarative API</strong>, for
-both server side and headless rendering.
+  Dilla is a fast but minimal WebAssembly builder based on the syntax and behavior
+  of the [Jinja2](https://jinja.palletsprojects.com/) implemented on top of
+  [Minijinja](https://docs.rs/minijinja/latest/minijinja). The goal is to
+  be able to pack your design system into a **universal**
+  package, executable through a simple **declarative API**, for
+  both server side and headless rendering.
+
+  To know more about Dilla visit our website [dilla.io](https://dilla.io).
 </div>
-
-To know more about Dilla visit our website [dilla.io](https://dilla.io).
 
 ---
 

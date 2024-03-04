@@ -1,6 +1,6 @@
 [package]
 name = "wasm-bindgen-dilla"
-version = "1.0.1"
+version = "1.0.0"
 description = "Dilla WASM with WASM-Bindgen"
 authors.workspace = true
 edition.workspace = true

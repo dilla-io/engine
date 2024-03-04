@@ -26,6 +26,16 @@ test:
     - rm -f crates/dilla-renderer/src/build/ds.rs && cp crates/dilla-renderer/src/build/test.rs crates/dilla-renderer/src/build/ds.rs
     - RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests --no-fail-fast -- "test_all" --exact --nocapture
     - RUST_BACKTRACE=0 DS=test cargo test --doc -p dilla-renderer -- --nocapture
+  # only:
+    # - merge_requests
+  only:
+    changes:
+      - crates/dilla-renderer/*
+
+coverage:
+  stage: test
+  cache: *cache_rust
+  script:
     - cd crates/dilla-renderer && cargo tarpaulin --out Xml
   artifacts:
     when: always
@@ -34,11 +44,10 @@ test:
         coverage_format: cobertura
         path: cobertura.xml
   coverage: '/\d+\.\d+% coverage, /'
-  # only:
-    # - merge_requests
   only:
-    changes:
-      - crates/dilla-renderer/*
+    - tags
+  except:
+    - branches
 
 .lint:
   stage: test
@@ -52,9 +61,11 @@ test:
         - crates/dilla-renderer/*
         - crates/dilla-describer/*
 
-audit:
+.audit:
   stage: test
   cache: *cache_rust
+  before_script:
+    - cargo binstall audit
   script:
     - cargo audit
   only:
@@ -74,5 +85,7 @@ pages:
     paths:
       - public
   only:
-    - master
-  # when: manual
+    changes:
+      - crates/dilla-renderer/*
+      - crates/dilla-describer/*
+  when: manual
