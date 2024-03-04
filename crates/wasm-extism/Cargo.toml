@@ -14,9 +14,9 @@ documentation.workspace = true
 rustdoc-args = ["--cfg", "docsrs", "--html-in-header", "doc-header.html"]
 
 [features]
-# default = ["describer", "prettify"]
 default = ["describer"]
 describer = []
+debug = []
 prettify = []
 
 [lib]

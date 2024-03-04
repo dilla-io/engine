@@ -20,22 +20,22 @@ use extism_pdk::*;
 #[cfg(feature = "prettify")]
 use html_minifier::minify;
 
-use dilla_renderer::render as dilla_render;
-// use dilla_renderer::{render as dilla_render, DESIGN_SYSTEM};
+use dilla_renderer::{render as dilla_render, DESIGN_SYSTEM};
 
-// const VERSION: &str = env!("CARGO_PKG_VERSION");
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[cfg(feature = "describer")]
 use dilla_describer::describe as dilla_describe;
 
 #[plugin_fn]
-pub fn render_html(payload: String) -> FnResult<String> {
-    // #[cfg(feature = "describer")]
-    // println!("Dilla DEV Component v{VERSION} | ds: {}", DESIGN_SYSTEM);
-    // #[cfg(not(feature = "describer"))]
-    // println!("Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM);
+pub fn version() -> FnResult<String> {
+    Ok(format!("Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM))
+}
 
+#[plugin_fn]
+pub fn render_html(payload: String) -> FnResult<String> {
     let result = dilla_render(&payload, "full").unwrap();
+
     #[cfg(feature = "prettify")]
     return Ok(minify(result.clone()).expect("Failed to minify string"));
 
@@ -45,11 +45,6 @@ pub fn render_html(payload: String) -> FnResult<String> {
 
 #[plugin_fn]
 pub fn render(payload: String) -> FnResult<String> {
-    // #[cfg(feature = "describer")]
-    // println!("Dilla DEV Component v{VERSION} | ds: {}", DESIGN_SYSTEM);
-    // #[cfg(not(feature = "describer"))]
-    // println!("Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM);
-
     let result = dilla_render(&payload, "json").unwrap();
     Ok(result)
 }
