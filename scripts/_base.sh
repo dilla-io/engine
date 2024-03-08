@@ -511,7 +511,7 @@ _wasm_opt() {
   _log_debug "Run wasm-opt on ${_wasm} with '-Os --low-memory-unused --enable-bulk-memory'..."
 
   __size=$(_size "${_wasm}")
-  wasm-opt -Os --low-memory-unused --enable-bulk-memory "${_wasm}" -o "${_wasm}" 
+  wasm-opt -Os --low-memory-unused --enable-bulk-memory "${_wasm}" -o "${_wasm}"
   __size_after=$(_size "${_wasm}")
 
   _log_notice "WASM file successfully optimized! ${__size} > ${__size_after}"

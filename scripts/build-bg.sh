@@ -107,7 +107,7 @@ __build_wasm_wasm32() {
   _log_debug "DS=${DS} cargo build -p wasm-bindgen-dilla --target wasm32-unknown-unknown -r --no-default-features $_FEATURES $_QUIET"
 
   _log_notice "Cargo build..."
-  DS=${DS} cargo build -p wasm-bindgen-dilla --target wasm32-unknown-unknown -r --no-default-features -F "debug" $_FEATURES $_QUIET
+  DS=${DS} cargo build -p wasm-bindgen-dilla --target wasm32-unknown-unknown -r --no-default-features $_FEATURES $_QUIET
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}.wasm"
 
   _log_notice "Cargo build DEV..."
