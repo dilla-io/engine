@@ -15,10 +15,10 @@
     <script type="module">
       ;(async function () {
         const helper_js = '#DILLA_JS_HELPER_URL#'
-        const bg_js = window.location.href + '/#DS#.js'
+        const bg_js = window.location.href.replace('index.html', '') + '/#DS#.js'
 
         try {
-          const payload_file = await fetch(window.location.href.replace('/index.html', '').replace('/browser/', '/payload/index.json'))
+          const payload_file = await fetch(window.location.href.replace('index.html', '').replace('/browser/', '/payload/index.json'))
           const payload = await payload_file.json()
 
           const dilla_bg = await import(bg_js)

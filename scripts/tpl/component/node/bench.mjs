@@ -7,12 +7,13 @@
 import { argv } from 'node:process'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { join } from 'node:path'
+import fs from 'fs'
 import { render } from '../#DS#.mjs'
 import { performance } from 'node:perf_hooks'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const payload = join(__dirname, '/../payload/index.json')
+let payload = __dirname + '/../payload/index.json'
+payload = fs.readFileSync(payload, 'utf8')
 
 const benchmarkRuns = argv[2] ?? 20
 const warmupRuns = argv[3] ?? 2

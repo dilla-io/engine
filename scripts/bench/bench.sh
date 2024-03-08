@@ -15,12 +15,19 @@ _print_help() {
   cat <<HEREDOC
 Run benchmarks for Dilla WASM
 
-Syntax: bench.sh <payload_size[sm,md,l,xl]> <runs> <warmup>
+Syntax: bench.sh <options>
 
 Parameters:
-  payload_size     Can be any of xs,sm,md,l,xl, default: sm.
-  runs             Number of bench runs, default: 20
-  warmup           Number of bench warmup, default: 2
+  --node-only     Node perf tests only
+  --hyper-only    Hyperfine tests only (Node with bootstrap)
+  -t | --test     Smoke test, just run render() to check everything works.
+  -d | --ds       Design system to use, default: bootstrap_5
+  -s | --size     Can be any of xs,sm,md,l,xl, default: sm.
+  -r | --runs     Number of bench runs, default: 20
+  -w | --warmup   Number of bench warmup, default: 2
+
+USage example:
+  bench.sh -r 100 -w 2 --node-only
 HEREDOC
 }
 
@@ -29,6 +36,7 @@ HEREDOC
 _PRINT_HELP=0
 _TEST_RUN=0
 _RUN_ONLY_NODE=0
+_RUN_ONLY_HYPERFINE=0
 
 _DS="bootstrap_5"
 _PAYLOAD_SIZE="sm"
@@ -37,6 +45,7 @@ _WARMUP=2
 
 # Initialize additional expected option variables.
 _CMD="run"
+# _CMD="print_help"
 # _CMD=()
 
 __get_option_value() {
@@ -58,8 +67,11 @@ while ((${#})); do
   -h | --help)
     _PRINT_HELP=1
     ;;
-  -n | --node-only)
+  --node-only)
     _RUN_ONLY_NODE=1
+    ;;
+  --hyper-only)
+    _RUN_ONLY_HYPERFINE=1
     ;;
   -t | --test)
     _CMD="smoke"
@@ -134,42 +146,51 @@ _copy_payload() {
 }
 
 _smoke() {
+  __payload_file="$_DIR/../../tmp/payload_test.json"
   _copy_payload
-  echo "[TEST] Rust bin..."
+  echo -e "[TEST] Rust bin..."
   dist/bin/${_DS} render -m json -r dist/${_DS}/component/payload/index.json
-  echo "[TEST] wasmtime..."
+  echo -e "[TEST] wasmtime..."
   wasmtime --dir=. dist/${_DS}/component/wasm/${_DS}.wasm render dist/${_DS}/component/payload/index.json
-  echo "[TEST] Component Node..."
+  echo -e "[TEST] Component Node..."
   node --no-warnings dist/${_DS}/component/node/render.mjs
-  echo "[TEST] Component Node WASI..."
+  echo -e "[TEST] Component Node WASI..."
   node --no-warnings dist/${_DS}/component/node/wasi.mjs
-  echo "[TEST] Bindgen Node..."
+  echo -e "[TEST] Bindgen Node..."
   node --no-warnings dist/${_DS}/bindgen/node/render.mjs
-  echo "[TEST] Extism Node..."
+  echo -e "[TEST] Extism Node..."
   node --no-warnings dist/${_DS}/extism/node/render.mjs
 }
 
 _run() {
   _copy_payload
-
   if ((!_RUN_ONLY_NODE)); then
-    hyperfine --runs $_RUNS --warmup $_WARMUP \
-      -n "Bin" \
-      -n "Wasmtime" \
-      -n "Component wasi" \
-      -n "Wasm-Bindgen" \
-      -n "Extism" \
-      -n "Component jco" \
-      --export-markdown "${_DIR}/report/bench_${_DS}_${_RUNS}.md" \
-      --export-csv "${_DIR}/report/bench_${_DS}_${_RUNS}.csv" \
-      "dist/bin/${_DS} render -m json -r dist/${_DS}/component/payload/index.json" \
-      "wasmtime --dir=. dist/${_DS}/component/wasm/${_DS}.wasm render dist/${_DS}/component/payload/index.json" \
-      "node --no-warnings dist/${_DS}/component/node/wasi.mjs render /local/payload/index.json" \
-      "node --no-warnings dist/${_DS}/bindgen/node/render.mjs" \
-      "node --no-warnings dist/${_DS}/extism/node/render.mjs" \
-      "node --no-warnings dist/${_DS}/component/node/render.mjs ../payload/index.json"
+    _run_hyperfine
   fi
+  if ((!_RUN_ONLY_HYPERFINE)); then
+    _run_node
+  fi
+}
 
+_run_hyperfine() {
+      # -n "Bin" \
+      # "dist/bin/${_DS} render -m json -r dist/${_DS}/component/payload/index.json" \
+  hyperfine --runs $_RUNS --warmup $_WARMUP \
+    -n "Wasmtime" \
+    -n "Component wasi" \
+    -n "Wasm-Bindgen" \
+    -n "Extism" \
+    -n "Component jco" \
+    --export-markdown "${_DIR}/report/bench_${_DS}_${_RUNS}.md" \
+    --export-csv "${_DIR}/report/bench_${_DS}_${_RUNS}.csv" \
+    "wasmtime --dir=. dist/${_DS}/component/wasm/${_DS}.wasm render dist/${_DS}/component/payload/index.json" \
+    "node --no-warnings dist/${_DS}/component/node/wasi.mjs render" \
+    "node --no-warnings dist/${_DS}/bindgen/node/render.mjs" \
+    "node --no-warnings dist/${_DS}/extism/node/render.mjs" \
+    "node --no-warnings dist/${_DS}/component/node/render.mjs"
+}
+
+_run_node() {
   echo -e "Benchmark: Bindgen Node"
   _bench_bg_node=$(node --no-warnings dist/${_DS}/bindgen/node/bench.mjs $_RUNS $_WARMUP)
   echo -e "  Time\t\t\t$_bench_bg_node"
@@ -212,7 +233,7 @@ _main() {
     if [[ "$(type -t "${__call}")" == 'function' ]]; then
       $__call
     else
-      _log_error "Unknown command: ${_CMD}"
+      echo -e "[Error] Unknown command: ${_CMD}"
     fi
   fi
 }

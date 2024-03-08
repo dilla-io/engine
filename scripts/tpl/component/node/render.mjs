@@ -5,17 +5,17 @@
  */
 'use strict'
 
-import { argv } from 'node:process'
 import { cli } from '@bytecodealliance/preview2-shim'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { join } from 'node:path'
+import fs from 'fs'
 import { render } from '../#DS#.mjs'
 
 const log = cli.stdout.getStdout()
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const payload = join(__dirname, argv[2] ?? '/../payload/index.json')
+let payload = __dirname + '/../payload/index.json'
+payload = fs.readFileSync(payload, 'utf8')
 
 const result = render(payload)
 

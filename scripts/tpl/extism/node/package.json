@@ -9,6 +9,6 @@
   "main": "render.mjs",
   "module": "render.mjs",
   "dependencies": {
-    "@extism/extism": "^1.0"
+    "@extism/extism": "^1"
   }
 }

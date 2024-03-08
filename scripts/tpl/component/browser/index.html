@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- Simple base example to load and run a Dilla design system with WASM #TYPE# https://dilla.io -->
+  <!-- Simple base example to load and run a Dilla design system with WASM component https://dilla.io -->
 
   <head>
     <link rel="icon" href="favicon.ico" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dilla #TYPE# #DS# v#VERSION#</title>
+    <title>Dilla component #DS# v#VERSION#</title>
   </head>
 
   <body>
@@ -24,12 +24,12 @@
       }
     </script>
     <script type="module">
-      const helper_js = '#DILLA_JS_HELPER_URL#'
-      const co_js = window.location.href.replace('/browser/', '/#DS#.mjs')
+      const helper_js = 'https://data.dilla.io/helpers/index.js'
+      const co_js = window.location.href.replace('index.html', '').replace('/browser/', '/#DS#.mjs')
 
       ;(async function () {
         try {
-          const payload_file = await fetch(window.location.href.replace('/browser/', '/payload/index.json'))
+          const payload_file = await fetch(window.location.href.replace('index.html', '').replace('/browser/', '/payload/index.json'))
           let payload = await payload_file.json()
 
           const dilla_co = await import(co_js)
@@ -42,7 +42,7 @@
           let result = dilla_co.render(payload)
           const duration = Date.now() - time_start
 
-          console.debug(`[Dilla #TYPE#] generated in ${duration}ms`)
+          console.debug(`[Dilla component] generated in ${duration}ms`)
 
           result = JSON.parse(result)
 
@@ -50,7 +50,7 @@
           helper.insertDataInDom(result, { system_javascript: true, system_stylesheet: true })
           document.getElementById('dilla').innerHTML = result.body
         } catch (error) {
-          console.error(`[Dilla #TYPE#] Fail render`, error)
+          console.error(`[Dilla component] Fail render`, error)
         }
       })()
     </script>
