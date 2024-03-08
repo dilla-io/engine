@@ -106,8 +106,8 @@ __build_wasm_component() {
   _log_debug "DS=${DS} cargo component build -p wasm-component -r --no-default-features $_FEATURES $_QUIET"
 
   _log_notice "Cargo build..."
-  # cd to avoid bindings generation for all crates.
-  cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build -p wasm-component -r --no-default-features $_FEATURES $_QUIET
+
+  DS=${DS} cargo component build -p wasm-component -r --no-default-features $_FEATURES $_QUIET
 
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}.wasm"
 
@@ -116,7 +116,7 @@ __build_wasm_component() {
   _log_debug "DS=${DS} cargo component build -p wasm-component -r -F \"describer\" $_FEATURES $_QUIET"
   _log_debug "cargo component build -p wasm-component -r -F \"describer\" $_QUIET"
 
-  cd "${DILLA_WASM_COMPONENT_LIB}" && DS=${DS} cargo component build -p wasm-component -r -F "describer" $_FEATURES $_QUIET
+  DS=${DS} cargo component build -p wasm-component -r -F "describer" $_FEATURES $_QUIET
 
   cp "${__generated_wasm}" "${_DILLA_DS_TARGET}/wasm/${DS}_dev.wasm"
 }
