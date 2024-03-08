@@ -3,7 +3,7 @@
 /crates/dilla-renderer/src/build/ds.rs
 
 # Dynamic component binding
-/crates/wasm-component/src/bindings.rs
+bindings.rs
 
 # Dist folder, keep only files for package generation
 /dist/
