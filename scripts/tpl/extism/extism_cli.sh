@@ -12,7 +12,7 @@ _DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo -e "[Notice] Run 'version'"
 echo -e ""
 
-extism call --wasi "${_DIR}/w3c_1.wasm" version
+extism call --wasi "${_DIR}/#DS#.wasm" version
 
 echo -e ""
 echo -e "[Notice] Run 'describe components::_list'"
@@ -24,9 +24,9 @@ echo -e ""
 echo -e "[Notice] Render index.json"
 echo -e ""
 
-_payload=$(<"${_DIR}/payload/index.json")
-_result=$(extism call --wasi --input "${_payload}" "${_DIR}/#DS#.wasm" render)
+# _payload=$(<"${_DIR}/payload/index.json")
+# _result=$(extism call --wasi --input "${_payload}" "${_DIR}/#DS#.wasm" render_test)
 
-# extism call --wasi --input '/tmp/payload/index.json' --allow-path .:/tmp ./#DS#_dev.wasm render
+_result=$(extism call --wasi --input '/tmp/payload/index.json' --allow-path ${_DIR}:/tmp "${_DIR}/#DS#.wasm" render_test)
 
 echo "${_result}" | python -m json.tool

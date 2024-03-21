@@ -79,6 +79,10 @@ __build_wasm() {
     __build_wasm_component
   else
     _log_warn_light "Skip WASM build step for ${DS}"
+    if ! [ -f "${_DILLA_DS_TARGET}/wasm/${DS}.wasm" ]; then
+      _log_error "Missing wasm file ${_DILLA_DS_TARGET}/wasm/${DS}.wasm"
+      _exit_1
+    fi
   fi
 
   __build_wasm_jco
@@ -131,7 +135,14 @@ __build_wasm_jco() {
     fi
     _log_debug "npm install @bytecodealliance/jco binaryen -s"
     cd "${DILLA_DIST_FOLDER}" && npm install @bytecodealliance/jco binaryen -s
+  else
+    _log_debug "npm update -s"
+    cd "${DILLA_DIST_FOLDER}" && npm update -s
   fi
+
+  _log_debug "Copy binaryen in jco"
+  rm -rf "${DILLA_DIST_FOLDER}/node_modules/@bytecodealliance/jco/node_modules/binaryen" 
+  ln -s "${DILLA_DIST_FOLDER}/node_modules/binaryen" "${DILLA_DIST_FOLDER}/node_modules/@bytecodealliance/jco/node_modules/" 
 
   # local _opt='--no-typescript'
   local _opt=''

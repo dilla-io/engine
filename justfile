@@ -94,6 +94,15 @@ build-one ds:
 	@./scripts/build-co.sh run {{ds}}
 	@./scripts/build-ex.sh run {{ds}}
 
+# [build] Build one DS to ALL WASM and sync to remote
+build-one-sync ds:
+	@./scripts/build-bg.sh run {{ds}}
+	@./scripts/sync.sh bg {{ds}}
+	@./scripts/build-co.sh run {{ds}}
+	@./scripts/sync.sh co {{ds}}
+	@./scripts/build-ex.sh run {{ds}}
+	@./scripts/sync.sh ex {{ds}}
+
 # [build] Build ALL DS, type can be cli, bg, co, ex or all
 build-all type='all':
 	@ if [ {{type}} == 'all' ]; then \

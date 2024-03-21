@@ -9,6 +9,6 @@
   "main": "index.html",
   "module": "test.js",
   "dependencies": {
-    "@extism/extism": "^1.0"
+    "@extism/extism": "^1"
   }
 }

@@ -175,38 +175,59 @@ _run() {
 _run_hyperfine() {
       # -n "Bin" \
       # "dist/bin/${_DS} render -m json -r dist/${_DS}/component/payload/index.json" \
-  hyperfine --runs $_RUNS --warmup $_WARMUP \
-    -n "Wasmtime" \
-    -n "Component wasi" \
-    -n "Wasm-Bindgen" \
-    -n "Extism" \
-    -n "Component jco" \
-    --export-markdown "${_DIR}/report/bench_${_DS}_${_RUNS}.md" \
-    --export-csv "${_DIR}/report/bench_${_DS}_${_RUNS}.csv" \
-    "wasmtime --dir=. dist/${_DS}/component/wasm/${_DS}.wasm render dist/${_DS}/component/payload/index.json" \
-    "node --no-warnings dist/${_DS}/component/node/wasi.mjs render" \
-    "node --no-warnings dist/${_DS}/bindgen/node/render.mjs" \
-    "node --no-warnings dist/${_DS}/extism/node/render.mjs" \
-    "node --no-warnings dist/${_DS}/component/node/render.mjs"
+          #  --export-csv "${_DIR}/report/bench_${_DS}_${_PAYLOAD_SIZE}_${_RUNS}.csv" \
+  if [ "${_PAYLOAD_SIZE}" == "sm" ] || [ "${_PAYLOAD_SIZE}" == "sm" ]; then
+    hyperfine --runs $_RUNS --warmup $_WARMUP \
+      -n "Wasmtime" \
+      -n "Extism-cli" \
+      -n "Component jco" \
+      -n "Wasm-Bindgen" \
+      -n "Extism" \
+      -n "Component wasi" \
+      --export-markdown "${_DIR}/report/bench_${_DS}_${_PAYLOAD_SIZE}_${_RUNS}.md" \
+      "wasmtime --dir=. dist/${_DS}/component/wasm/${_DS}.wasm render dist/${_DS}/component/payload/index.json" \
+      "extism call --wasi --input /tmp/payload/index.json --allow-path dist/${_DS}/extism/:/tmp dist/${_DS}/extism/${_DS}.wasm render_test" \
+      "node --no-warnings dist/${_DS}/component/node/render.mjs" \
+      "node --no-warnings dist/${_DS}/bindgen/node/render.mjs" \
+      "node --no-warnings dist/${_DS}/extism/node/render.mjs" \
+      "node --no-warnings dist/${_DS}/component/node/wasi.mjs render"
+  else
+    hyperfine --runs $_RUNS --warmup $_WARMUP \
+      -n "Wasmtime" \
+      -n "Extism-cli" \
+      -n "Component jco" \
+      -n "Wasm-Bindgen" \
+      -n "Extism" \
+      --export-markdown "${_DIR}/report/bench_${_DS}_${_PAYLOAD_SIZE}_${_RUNS}.md" \
+      "wasmtime --dir=. dist/${_DS}/component/wasm/${_DS}.wasm render dist/${_DS}/component/payload/index.json" \
+      "extism call --wasi --input '/tmp/payload/index.json' --allow-path dist/${_DS}/extism/:/tmp "dist/${_DS}/extism/${_DS}.wasm" render_test" \
+      "node --no-warnings dist/${_DS}/component/node/render.mjs" \
+      "node --no-warnings dist/${_DS}/bindgen/node/render.mjs" \
+      "node --no-warnings dist/${_DS}/extism/node/render.mjs"
+  fi
 }
 
 _run_node() {
-  echo -e "Benchmark: Bindgen Node"
+  echo -e "Benchmark: Component"
+  _bench_co_node=$(node --no-warnings dist/${_DS}/component/node/bench.mjs $_RUNS $_WARMUP)
+  echo -e "  Time\t\t\t$_bench_co_node"
+
+  echo -e "Benchmark: Bindgen"
   _bench_bg_node=$(node --no-warnings dist/${_DS}/bindgen/node/bench.mjs $_RUNS $_WARMUP)
   echo -e "  Time\t\t\t$_bench_bg_node"
 
-  echo -e "Benchmark: Component Node WASI"
-  _bench_co_node_wasi=$(node --no-warnings dist/${_DS}/component/node/bench_wasi.mjs $_RUNS $_WARMUP)
-  _bench_co_node_wasi=$(echo "${_bench_co_node_wasi}" | sed '/^[[:space:]]*$/d')
-  echo -e "  Time\t\t\t${_bench_co_node_wasi}"
+  if [ "${_PAYLOAD_SIZE}" == "sm" ] || [ "${_PAYLOAD_SIZE}" == "sm" ]; then
+    echo -e "Benchmark: Component WASI"
+    _bench_co_node_wasi=$(node --no-warnings dist/${_DS}/component/node/bench_wasi.mjs $_RUNS $_WARMUP)
+    _bench_co_node_wasi=$(echo "${_bench_co_node_wasi}" | sed '/^[[:space:]]*$/d')
+    echo -e "  Time\t\t\t${_bench_co_node_wasi}"
+  else
+    echo -e "[SKIP] Component WASI"
+  fi
 
-  echo -e "Benchmark: Extism Node"
+  echo -e "Benchmark: Extism"
   _bench_ex_node=$(node --no-warnings dist/${_DS}/extism/node/bench.mjs $_RUNS $_WARMUP)
   echo -e "  Time\t\t\t$_bench_ex_node"
-
-  echo -e "Benchmark: Component Node"
-  _bench_co_node=$(node --no-warnings dist/${_DS}/component/node/bench.mjs $_RUNS $_WARMUP)
-  echo -e "  Time\t\t\t$_bench_co_node"
 
   _size=$(stat -c '%s' "${__payload_file}" | numfmt --to=iec)
   _lines=$(wc -l <"${__payload_file}")
