@@ -29,7 +29,10 @@ use dilla_describer::describe as dilla_describe;
 
 #[plugin_fn]
 pub fn version() -> FnResult<String> {
-    Ok(format!("Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM))
+    Ok(format!(
+        "Dilla Component v{VERSION} | ds: {}",
+        DESIGN_SYSTEM
+    ))
 }
 
 #[plugin_fn]

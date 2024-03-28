@@ -148,13 +148,12 @@ fn dispatch(function: String, req: String, silent: &str) -> String {
 fn version() -> String {
     #[cfg(feature = "describer")]
     return format!(
-        "[DEBUG] Dilla DEV Component v{VERSION} | ds: {}", DESIGN_SYSTEM
+        "[DEBUG] Dilla DEV Component v{VERSION} | ds: {}",
+        DESIGN_SYSTEM
     );
 
     #[cfg(not(feature = "describer"))]
-    format!(
-        "[DEBUG] Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM
-    )
+    format!("[DEBUG] Dilla Component v{VERSION} | ds: {}", DESIGN_SYSTEM)
 }
 
 fn main_render(name: &str, silent: &str) -> String {
