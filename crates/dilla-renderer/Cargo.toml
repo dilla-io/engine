@@ -38,9 +38,9 @@ phf = { version = "0.11", features = ["macros"] }
 const-gen = "1.6"
 dotenv = "0.15"
 phf_codegen = "0.11"
-walkdir = "2.4"
+walkdir = "2.5"
 
 [dev-dependencies]
 assert-str = "0.1"
 similar-asserts = "1.5"
-walkdir = "2.4"
+walkdir = "2.5"
