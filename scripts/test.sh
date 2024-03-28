@@ -142,8 +142,8 @@ __test() {
     _log "Skip Rust build step for ${DS} tests"
   fi
 
-  cargo test $_QUIET --package dilla-renderer --test tests -- "test_${DS}" --exact --nocapture || true
-  # DS=${DS} cargo test $_QUIET --package dilla-renderer --test tests -- "test_${DS}" --exact --nocapture || true
+  # cargo test $_QUIET --package dilla-renderer --test tests -- "test_${DS}" --exact --nocapture || true
+  DS=${DS} cargo test $_QUIET --package dilla-renderer --test tests -- "test_${DS}" --exact --nocapture || true
 
   # _log "Tests cleanup..."
   rm -rf "${_TESTS_FOLDER}/${DS:?}"
@@ -187,8 +187,8 @@ __gen() {
     filename=$(basename "${_file%.*}")
     _output_file=${_path}${filename}.html
     _log_info "Generate HTML result as ${_TEST_OUTPUT} for ${filename}..."
-    cargo run -q -- render "${_file}" -m "${_TEST_OUTPUT}" -w "${_output_file}"
-    # DS=${DS} cargo run -q -- render "${_file}" -m "${_TEST_OUTPUT}" -w "${_output_file}"
+    # cargo run -q -- render "${_file}" -m "${_TEST_OUTPUT}" -w "${_output_file}"
+    DS=${DS} cargo run -q -- render "${_file}" -m "${_TEST_OUTPUT}" -w "${_output_file}" --raw
   done
 }
 

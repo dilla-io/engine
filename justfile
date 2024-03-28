@@ -168,7 +168,7 @@ tests:
 
 # [test] Generate tests files under run_ds_src
 gen-tests ds:
-	@./scripts/pre_build-cli.sh run {{ds}} --skip-check --skip-pull
+	@./scripts/pre_build.sh run {{ds}} --skip-check --skip-pull
 	@./scripts/build-cli.sh run {{ds}}
 	@./scripts/test.sh gen {{ds}}
 
@@ -176,13 +176,21 @@ gen-tests ds:
 run ds mode="_test_full":
 	@ DS={{ds}} cargo run --quiet -- render payload.json -m "{{mode}}"
 
+# [run] Render payload.json with output '_test' without prettify/minify to terminal
+run-as-test ds mode="_test":
+	@ DS={{ds}} cargo run --quiet -- render payload.json -m "{{mode}}" --raw
+
 # [run] Render payload.json with output '_test_full' to file payload.html
 run-file ds mode="_test_full":
 	@ DS={{ds}} cargo run --quiet -- render payload.json -w payload.html -m "{{mode}}"
 
+# [run] Render payload.json with output '_test' without prettify/minify to file payload.html
+run-as-test-file ds mode="_test_full":
+	@ DS={{ds}} cargo run --quiet -- render payload.json -w payload.html -m "{{mode}}" --raw
+
 # [dev] Check swing and bootstrap 5 diff from var/run_ds_src
 swing-diff:
-	@ diff -qr ./var/run_ds_src/bootstrap_5/components/ ./var/run_ds_src/swing_1/components/ | grep "bootstrap_5"
+	-@ diff -qr ./var/run_ds_src/bootstrap_5/components/ ./var/run_ds_src/swing_1/components/ | grep "bootstrap"
 
 # [dev] Sync and copy bs5 templates to swing
 swing-sync:
