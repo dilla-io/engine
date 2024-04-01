@@ -235,13 +235,34 @@ impl Output for Renderer {
     fn to_output_string(&self, output: &str) -> String {
         let mut style: String = "".to_string();
         if !self.output.style.is_empty() {
-            style = format!("<style>\n{}</style>\n", self.output.style);
+            style = format!(r#"
+            <style>
+                {}
+            </style>
+            "#, self.output.style);
         }
 
         let response: String = match output {
-            "_test" => self.output.body.to_string(),
+            "_test" => format!(
+                r#"
+                {}
+                {}
+                {}
+                "#,
+                self.output.body,
+                self.output.stylesheet,
+                self.output.javascript,
+            ),
             "_test_full"=> format!(
-                "{}{}{}{}{}{}{}",
+                r#"
+                {}
+                {}
+                {}
+                {}
+                {}
+                {}
+                {}
+                "#,
                 self.output.body,
                 self.output.head,
                 style,
@@ -251,7 +272,20 @@ impl Output for Renderer {
                 self.output.javascript,
             ),
             "full" => format!(
-                "<!DOCTYPE html>\n<html>\n\t<head>\n{}\n{}\n{}\n{}\n\t</head>\n\t<body>\n{}\n{}\n{}\n\t</body>\n</html>",
+                r#"<!DOCTYPE html>
+                <html>
+                    <head>
+                        {}
+                        {}
+                        {}
+                        {}
+                    </head>
+                    <body>
+                        {}
+                        {}
+                        {}
+                    </body>
+                </html>"#,
                 self.output.head,
                 self.output.system_stylesheet,
                 self.output.stylesheet,
