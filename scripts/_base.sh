@@ -583,7 +583,7 @@ function _log_success() {
 }
 
 function _log_debug() {
-  if _blank "${_DEBUG}"; then
+  if [ "${_DEBUG}" = "0" ]; then
     return
   fi
   local -r message="$1"
@@ -592,7 +592,7 @@ function _log_debug() {
 }
 
 function _log_notice() {
-  if ! _blank "${_QUIET}"; then
+  if ! _blank "${_QUIET}" && [ "${_DEBUG}" = "0" ]; then
     return
   fi
   local -r message="$1"
@@ -601,7 +601,7 @@ function _log_notice() {
 }
 
 function _log_warn_light() {
-  if ! _blank "${_QUIET}"; then
+  if ! _blank "${_QUIET}" && [ "${_DEBUG}" = "0" ]; then
     return
   fi
   local -r message="$1"
@@ -610,7 +610,7 @@ function _log_warn_light() {
 }
 
 function _log_warn() {
-  if ! _blank "${_QUIET}"; then
+  if ! _blank "${_QUIET}" && [ "${_DEBUG}" = "0" ]; then
     return
   fi
   local -r message="$1"
@@ -619,7 +619,7 @@ function _log_warn() {
 }
 
 function _log_success_light() {
-  if ! _blank "${_QUIET}"; then
+  if ! _blank "${_QUIET}" && [ "${_DEBUG}" = "0" ]; then
     return
   fi
   local -r message="$1"
@@ -649,11 +649,9 @@ _FEATURES=
 _PRINT_HELP=0
 _REPO=
 _SKIP_DOCKER_PULL=0
-_TEST_OUTPUT="_test"
-_TEST_PATH="component"
 _VERBOSE=0
 _QUIET="--quiet"
-_DEBUG=
+_DEBUG=0
 
 _IS_DOCKER=
 
@@ -704,13 +702,6 @@ while ((${#})); do
     ;;
   --is-docker)
     _IS_DOCKER=1
-    ;;
-  -tf)
-    _TEST_OUTPUT="_test_full"
-    ;;
-  -tp)
-    _TEST_PATH="$(__get_option_value "${__arg}" "${__val-}")"
-    shift
     ;;
   --version)
     VERSION="$(__get_option_value "${__arg}" "${__val-}")"

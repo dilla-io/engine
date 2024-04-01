@@ -28,7 +28,8 @@ install-tools:
 upgrade-tools:
 	@ rustup update
 	@ cargo update --quiet
-	@ cargo binstall cargo-workspaces wasm-opt wasm-bindgen-cli cargo-component --force
+	@ cargo binstall cargo-workspaces wasm-bindgen-cli cargo-component --force -y
+	@ cargo binstall wasm-opt --force -y
 
 # [chore] Update local Rust and tools
 update:

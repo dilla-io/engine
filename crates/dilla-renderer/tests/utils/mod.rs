@@ -1,6 +1,8 @@
-#[allow(unused)]
-use assert_str::assert_str_trim_all_eq;
+#![allow(unused, dead_code)]
+
 use dilla_renderer::render as dilla_render;
+use html_minifier::HTMLMinifier;
+// use pretty_assertions::assert_eq;
 use similar_asserts::assert_eq;
 use std::env;
 use std::fs::File;
@@ -48,6 +50,68 @@ pub fn test_loop(dir: &str, output: &str, suffix_expected: &str) {
 
         test_generic_diff(&name, dir, output, suffix_expected);
         // eprintln!("[info] payload: {name}.json");
+    }
+}
+
+pub fn test_ds_loop(ds: &str, dir: &str, output: &str, suffix_expected: &str) {
+    let root = env::var("CARGO_MANIFEST_DIR").expect("Failed to get root directory");
+
+    let preview_path = format!("{root}/tests/{ds}/components");
+    let source_path = format!("{root}/tests/{ds}/tests/{dir}");
+
+    // println!("[debug] Test `tests/{ds}/tests/{dir}`, output `{output}`");
+    // println!("[debug] Payload from: tests/{ds}/components");
+
+    if !std::path::Path::new(&preview_path).exists() {
+        println!("[Error] Test not found in `{preview_path}`");
+        return;
+    }
+
+    if !std::path::Path::new(&source_path).exists() {
+        println!("[Error] Test not found in `{source_path}`");
+        return;
+    }
+
+    for entry in WalkDir::new(preview_path).into_iter().filter_map(|e| e.ok()) {
+        let path = entry.path();
+
+        if !path.is_dir() {
+            continue;
+        }
+
+        let name = path
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap_or_default();
+
+        if (name == "components") {
+            continue;
+        }
+
+        let path = entry.path().to_str().unwrap();
+
+        let payload_path = format!("{path}/preview.json");
+        let result_path = format!("{source_path}/{name}{suffix_expected}");
+
+        if !std::path::Path::new(&result_path).exists() {
+            println!("[SKIP TEST {name}] No result file {result_path}");
+            continue;
+        }
+
+        if std::path::Path::new(&payload_path).exists() {
+            // println!("[debug] test payload: {ds}/components/{name}/preview.json");
+            let test_result = test_ds_generic_diff(&payload_path, &result_path, output);
+
+            let expected = test_result.0;
+            let result_trim = test_result.1;
+
+            assert_eq!(
+                expected,
+                result_trim,
+                "\n\n[TEST] {ds}/components/{name}/preview.json"
+            );
+        }
     }
 }
 
@@ -99,6 +163,26 @@ fn test_generic_diff(name: &str, dir: &str, output: &str, suffix_expected: &str)
     );
 }
 
+pub fn test_ds_generic_diff(payload_json_path: &str, result_path: &str, output: &str) -> (String, String) {
+    let mut data = "".to_string();
+    if std::path::Path::new(&payload_json_path).exists() {
+        data = load_ds_file(payload_json_path);
+        if data.is_empty() {
+            eprintln!("[SKIP] Empty payload file {payload_json_path}");
+            return ("".to_string(), "".to_string());
+        }
+    }
+    else {
+        data = payload_json_path.to_string();
+    }
+
+    let result = dilla_render(&data, output).unwrap_or("<!-- Render failed! -->".to_string());
+    let result_trim = trim_whitespace(&result);
+    let expected = trim_whitespace(&load_ds_file(result_path));
+
+    return (expected, result_trim);
+}
+
 fn load(name: &str, dir: &str, suffix_expected: &str) -> (String, String) {
     let root = env::var("CARGO_MANIFEST_DIR").expect("Failed to get directory");
     let filename = format!("{root}/tests/{dir}/{name}{suffix_expected}");
@@ -116,6 +200,15 @@ fn load(name: &str, dir: &str, suffix_expected: &str) -> (String, String) {
 fn load_file(name: &str, dir: &str, suffix_expected: &str) -> String {
     let root = env::var("CARGO_MANIFEST_DIR").expect("Failed to get directory");
     let filename = format!("{root}/tests/{dir}/{name}{suffix_expected}");
+    let mut contents = String::new();
+    File::open(&filename)
+        .unwrap_or_else(|_| panic!("File not found: {}", filename))
+        .read_to_string(&mut contents)
+        .unwrap_or_else(|_| panic!("Failed to read file: {}", filename));
+    contents
+}
+
+fn load_ds_file(filename: &str) -> String {
     let mut contents = String::new();
     File::open(&filename)
         .unwrap_or_else(|_| panic!("File not found: {}", filename))
@@ -165,5 +258,17 @@ fn trim_whitespace(s: &str) -> String {
         .replace('\t', "")
         .replace("><link", ">\n<link")
         .replace("</script><script", "</script>\n<script");
-    new_str
+
+    format_minify(new_str)
+}
+
+#[doc(hidden)]
+fn format_minify(s: String) -> String {
+    let mut html_minifier = HTMLMinifier::new();
+    html_minifier.set_remove_comments(false);
+    html_minifier.digest(s.clone()).unwrap();
+
+    std::str::from_utf8(html_minifier.get_html())
+        .unwrap()
+        .to_string()
 }

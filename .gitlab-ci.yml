@@ -24,8 +24,8 @@ test:
   cache: *cache_rust
   script:
     - rm -f crates/dilla-renderer/src/build/ds.rs && cp crates/dilla-renderer/src/build/test.rs crates/dilla-renderer/src/build/ds.rs
-    - RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests --no-fail-fast -- "test_all" --exact --nocapture
-    - RUST_BACKTRACE=0 DS=test cargo test --doc -p dilla-renderer -- --nocapture
+    - RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests_core --no-fail-fast -- --exact --nocapture
+    - RUST_BACKTRACE=0 DS=test cargo test --doc -p dilla-renderer --no-fail-fast -- --exact --nocapture
   # only:
     # - merge_requests
   only:

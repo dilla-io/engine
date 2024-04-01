@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Dilla WASM builder from Design System with WASM-bindgen.
-# shellcheck disable=SC2086,SC2209
+# shellcheck disable=SC2086,SC2209,SC2129
 
 _DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -31,8 +31,6 @@ Commands:
 
 Options:
   -nb --no-build   Skip dilla build for test to speed up multiple tests run
-  -tf              For test gen command, use _test_full instead of _test output
-  -tp              For test gen command, path under /tests/, default /tests/component/
   -h --help        Display this help information
 
 Usage:
@@ -40,8 +38,6 @@ Usage:
   ${_ME} int --no-build
   ${_ME} run [_DS_NAME_]
   ${_ME} gen [_DS_NAME_]
-  ${_ME} gen [_DS_NAME_]
-  ${_ME} gen [_DS_NAME_] -tf -tp component_with_lib
 HEREDOC
 }
 
@@ -91,49 +87,27 @@ __test_int() {
     _exit_1
   fi
 
-  _log_info "Run tests: test_${_type}..."
+  _log_debug "Run tests: test_${_type}..."
 
-  DS=test cargo test $_QUIET --package dilla-renderer --test tests  --no-fail-fast -- "test_${_type}" --exact --nocapture
+  DS=test cargo test $_QUIET --package dilla-renderer --test tests_core --no-fail-fast -- "test_${_type}" --exact --nocapture
 }
 
 __test() {
   local DS=${1-}
 
   __path="${DILLA_RUN_DS_FOLDER}/${DS}/tests"
-
   if ! [ -d "${__path}" ]; then
     _log_error "[SKIP] Missing test folder: ${__path}"
     return
   fi
 
-  _log_info "Run tests: test_${DS}...DO NOT INTERRUPT!"
-
-  if [ -d "${_TESTS_FOLDER}/${DS}" ]; then
-    rm -rf "${_TESTS_FOLDER}/${DS:?}"
-  fi
-  mkdir -p "${_TESTS_FOLDER}/${DS}"
-  ln -s "${__path}" "${_TESTS_FOLDER}/${DS}"
-
-  __dilla_test="${_TESTS_FOLDER}/tests.rs"
-  if ! [ -f "${__dilla_test}" ]; then
-    _log_error "Missing Dilla test file: ${__dilla_test}"
-    _exit_1
+  __path_co="${DILLA_RUN_DS_FOLDER}/${DS}/components"
+  if ! [ -d "${__path_co}" ]; then
+    _log_error "[SKIP] Missing test folder: ${__path_co}"
+    return
   fi
 
-  local _ds_test="${_TESTS_FOLDER}/${DS}/tests/tests.rs"
-  if ! [ -f "${_ds_test}" ]; then
-    _log_error "Missing DS test file: ${_ds_test}"
-    _exit_1
-  fi
-
-  # Append our DS test function(s) to Dilla tests file.
-  if ! [ -f "${__dilla_test}.bak" ]; then
-    rm -f "${__dilla_test}.bak"
-  fi
-
-  cp "${__dilla_test}" "${__dilla_test}.bak"
-  echo "// TMP test, will be removed at the end of tests, if not remove it!" >>"${__dilla_test}"
-  cat "${_ds_test}" >>"${__dilla_test}"
+  _cp_ds
 
   if ! ((_NO_BUILD)); then
     # shellcheck source=/dev/null
@@ -142,13 +116,8 @@ __test() {
     _log "Skip Rust build step for ${DS} tests"
   fi
 
-  # cargo test $_QUIET --package dilla-renderer --test tests -- "test_${DS}" --exact --nocapture || true
-  DS=${DS} cargo test $_QUIET --package dilla-renderer --test tests -- "test_${DS}" --exact --nocapture || true
-
-  # _log "Tests cleanup..."
-  rm -rf "${_TESTS_FOLDER}/${DS:?}"
-  rm -f "${__dilla_test}"
-  mv "${__dilla_test}.bak" "${__dilla_test}"
+  _log_debug "Run tests: test_${DS}..."
+  DS=${DS} cargo test -p dilla-renderer --no-default-features --test tests_integrations -- --exact --nocapture || true
 }
 
 __test_docker() {
@@ -173,23 +142,74 @@ __gen() {
     _exit_1
   fi
 
+  _cp_ds
+
   _log_info "Gen DS: ${DS} tests into ${DILLA_INPUT_DIR}/${DS}..."
 
-  _path="${DILLA_INPUT_DIR}/${DS}/tests/${_TEST_PATH}/"
+  _components_path="${DILLA_OUTPUT_DIR}/${DS}/components/"
+  _tests_path="${DILLA_INPUT_DIR}/${DS}/tests/"
 
-  if ! [[ -d "${_path}" ]]; then
-    _log_error "Input dir not found at ${_path}."
+  if ! [[ -d "${_components_path}" ]]; then
+    _log_error "Input dir not found at ${_components_path}."
     _exit_1
   fi
 
-  _files="${_path}*.json"
-  for _file in ${_files}; do
-    filename=$(basename "${_file%.*}")
-    _output_file=${_path}${filename}.html
-    _log_info "Generate HTML result as ${_TEST_OUTPUT} for ${filename}..."
-    # cargo run -q -- render "${_file}" -m "${_TEST_OUTPUT}" -w "${_output_file}"
-    DS=${DS} cargo run -q -- render "${_file}" -m "${_TEST_OUTPUT}" -w "${_output_file}" --raw
+  _list_payload=('')
+  for _file in "$_components_path"/*; do
+    if [ -d "$_file" ]; then
+      name=$(basename "${_file%.*}")
+      _output_file=${_tests_path}${name}.html
+
+      # Do we have a test payload?
+      _test_payload=${_tests_path}${name}.json
+      if [ ! -f "${_test_payload}" ]; then
+        # If not a preview.json?
+        _test_payload=${_components_path}${name}/preview.json
+        if [ ! -f "${_test_payload}" ]; then
+          # Skip gen for this component.
+          _log_debug "[Skip] No payload found for: ${name}"
+          continue;
+        fi
+      fi
+      _list_payload+=("${name}")
+
+      __do_gen "${name}" "${_test_payload}" "${_output_file}"
+    fi
   done
+
+  # Check if we have any other payload.
+   _files="${_tests_path}*.json"
+  for _file in ${_files}; do
+    name=$(basename "${_file%.*}")
+    _output_file=${_tests_path}${name}.html
+
+    # Skip the common all lib test.
+    if [ "${name}" = "_libraries" ]; then
+      continue
+    fi
+
+    if ! _contains "${name}" "${_list_payload[@]}"; then
+      __do_gen "${name}" "${_file}" "${_output_file}"
+    fi
+  done
+}
+
+__do_gen() {
+  local _name=${1-}
+  local _test_payload=${2-}
+  local _output_file=${3-}
+
+  if [ "${_name}" = "*" ]; then
+    return
+  fi
+
+  _log_info "Generate HTML result as _test for ${name}..."
+
+  if ((_DRY_RUN)); then
+    _log_notice "DS=${DS} cargo run -q --no-default-features -- render ${_test_payload} -m _test -w ${_output_file}"
+  else
+    DS=${DS} cargo run -q --no-default-features -- render "${_test_payload}" -m "_test" -w "${_output_file}" || true
+  fi
 }
 
 ###############################################################################

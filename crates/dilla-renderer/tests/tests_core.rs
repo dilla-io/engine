@@ -1,15 +1,6 @@
 mod utils;
 
 #[test]
-fn test_all() {
-    test_output();
-    test_element();
-    test_component();
-    test_engine();
-    test_filter();
-}
-
-#[test]
 fn test_output() {
     utils::test_loop("output", "_test", "_test.html");
     utils::test_loop("output", "_test_full", "_test_full.html");
@@ -40,6 +31,5 @@ fn test_engine() {
 
 #[test]
 fn test_filter() {
-    // utils::test_loop("attribute", "_test", ".html");
     utils::test_loop("filter", "_test", ".html");
 }
