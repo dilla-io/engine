@@ -9,7 +9,10 @@ use crate::renderer::Renderer;
 use minijinja::{
     escape_formatter, value::ValueKind, AutoEscape, Environment, Error, Output, State,
 };
+
+#[cfg(feature = "random")]
 use rand::{thread_rng, Rng};
+
 use serde_json::Map;
 
 include!(concat!(env!("OUT_DIR"), "/codegen_templates.rs"));
@@ -698,8 +701,13 @@ pub fn has_class(
 /// ```
 ///
 pub fn generate_random_string() -> Result<minijinja::value::Value, Error> {
+    #[cfg(not(feature = "random"))]
+    return Ok(minijinja::value::Value::from("no-random"));
+
     // With rand and getrandom.
+    #[cfg(feature = "random")]
     let rand: i32 = thread_rng().gen::<i32>();
+    #[cfg(feature = "random")]
     Ok(minijinja::value::Value::from(rand))
 }
 
