@@ -19,8 +19,21 @@ fn main() {
 
     ds::config();
 
+    let root_path = env::var("CARGO_MANIFEST_DIR").unwrap();
     let design_system = env::var("DS").unwrap_or_else(|_| "test".to_string());
-    println!("[DEBUG] design_system: {design_system}");
+    let tpl_dir = dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run/".to_string());
+
+    let ds_path = if design_system == "test" {
+        test::config();
+        let tpl_dir = "./tests";
+        format!("{tpl_dir}")
+    } else {
+        format!("{tpl_dir}{design_system}")
+    };
+
+    if !std::path::Path::new(&ds_path).exists() {
+        panic!("[Fatal] Not found Design System: {ds_path}, please check the Design system id!");
+    }
 
     env::vars().for_each(|(key, value)| {
         if key.starts_with("DILLA_") {
@@ -28,8 +41,11 @@ fn main() {
         }
     });
 
-    build_templates(&design_system);
-    build_tests(&design_system);
+    build_templates(&ds_path, &root_path);
+
+    if design_system != "test" {
+        build_tests(&design_system, &ds_path, &root_path);
+    }
 }
 
 #[derive(CompileConst, Default)]
@@ -90,29 +106,14 @@ fn build_config(config: SystemConfig) {
 //         ("alert", include_str!("../../../run/components/alert/alert.jinja")),
 //     ],
 // };
-fn build_templates(design_system: &str) {
-    let tpl_dir = dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run/".to_string());
+fn build_templates(ds_path: &str, root_path: &str) {
+    let templates_path = format!("{ds_path}/components");
 
-    if !std::path::Path::new(&format!("{}{}", tpl_dir, design_system)).exists() {
-        panic!("[Fatal] Not found Design System: {}{}, please check the Design system id!", tpl_dir, design_system);
-    }
-
-    let tpl_sub_dir =
-        dotenv::var("DILLA_TPL_SUB_DIR").unwrap_or_else(|_| "/components".to_string());
-
-    let templates_path = if design_system == "test" {
-        test::config();
-        let tpl_dir = "./tests";
-        format!("{}{}", tpl_dir, tpl_sub_dir)
-    } else {
-        format!("{}{}{}", tpl_dir, design_system, tpl_sub_dir)
-    };
-
-    println!("[DEBUG] templates_path: {}", templates_path);
+    // println!("cargo::warning=[DEBUG] templates_path: {}", templates_path);
 
     let path = Path::new(&env::var("OUT_DIR").unwrap()).join("codegen_templates.rs");
     let mut file = BufWriter::new(File::create(path).unwrap());
-    let map = get_templates_paths(templates_path);
+    let map = get_templates_paths(templates_path, root_path);
 
     writeln!(
         &mut file,
@@ -123,9 +124,8 @@ fn build_templates(design_system: &str) {
 }
 
 // Generate the template paths before compiling.
-fn get_templates_paths(templates_path: String) -> phf_codegen::Map<String> {
+fn get_templates_paths(templates_path: String, root_path: &str) -> phf_codegen::Map<String> {
     let mut templates = phf_codegen::Map::new();
-    let root = env::var("CARGO_MANIFEST_DIR").unwrap();
 
     let walk_path = WalkDir::new(templates_path);
 
@@ -154,103 +154,23 @@ fn get_templates_paths(templates_path: String) -> phf_codegen::Map<String> {
 
         templates.entry(
             name,
-            format!("include_str!(\"{root}/{include_path}\")").as_str(),
+            format!("include_str!(\"{root_path}/{include_path}\")").as_str(),
         );
     }
     templates
 }
 
 // build the tests code for this DS.
-// @todo do not be fixed on preview.json, and loop sub json files, see w3c_1/components/card/
-fn build_tests(design_system: &str) {
-    let root = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let tpl_dir = dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run/".to_string());
+// @todo: list of missing tests?
+fn build_tests(design_system: &str, ds_path: &str, root_path: &str) {
+    let tests_path = format!("{root_path}/{ds_path}/tests");
 
-    let components_path = format!("{root}/{tpl_dir}{design_system}/components");
-    let tests_path = format!("{root}/{tpl_dir}{design_system}/tests");
-
-    println!("[DEBUG] components_path: {components_path}");
-    println!("[DEBUG] tests_path: {tests_path}");
+    // println!("cargo::warning=[DEBUG] tests_path: {tests_path}");
 
     let path = Path::new(&env::var("OUT_DIR").unwrap()).join("codegen_tests.rs");
     let mut file = BufWriter::new(File::create(path).unwrap());
 
-    let mut list_payload: Vec<String> = vec![];
-    let mut missing: Vec<String> = vec![];
-
-    // For each existing component, find a test payload or preview payload.
-    let walk_path = fs::read_dir(components_path).unwrap();
-    for entry in walk_path {
-        let entry = entry.unwrap();
-        let path = entry.path();
-
-        if !path.is_dir() {
-            continue;
-        }
-
-        let name = path.file_name().unwrap().to_str().unwrap_or_default();
-        if name == "components" {
-            continue;
-        }
-
-        list_payload.push(name.to_string());
-
-        let path = path.to_str().unwrap();
-
-        // Priority test if from tests folder json.
-        let mut payload_path = format!("{tests_path}/{name}.json");
-        let result_path = format!("{tests_path}/{name}.html");
-        let output = "_test".to_string();
-
-        if !Path::new(&payload_path).exists() {
-            payload_path = format!("{path}/preview.json");
-            if !Path::new(&payload_path).exists() {
-                missing.push(format!("[Notice] payload not found: {design_system}/components/{name}/preview.json"));
-                continue;
-            }
-        }
-
-        println!("[DEBUG] payload_path: {payload_path}");
-        println!("[DEBUG] result_path: {result_path}");
-
-        if Path::new(&result_path).exists() {
-            let code = format!(
-                r#"
-                #[test]
-                fn test_{design_system}_{name} () {{
-                    let res = utils::test_ds_generic_diff(&"{payload_path}", &"{result_path}", "{output}");
-                    assert_eq!(res.0, res.1);
-                }}
-                "#
-            );
-            writeln!(&mut file, "{code}").unwrap();
-        } else {
-            missing.push(format!("[Notice] missing: {tpl_dir}{design_system}/tests/{name}.html"));
-        }
-    }
-
-    // Add global libs tests.
-    let all_lib_result_path = format!("{tests_path}/_libraries.html");
-
-    println!("[DEBUG] common libraries: {tpl_dir}{design_system}/tests/_libraries.html");
-
-    if Path::new(&all_lib_result_path).exists() {
-        let code = format!(
-            r#"
-    #[test]
-    fn test_{design_system}_libraries () {{
-        let res = utils::test_ds_generic_diff(&"{{}}", &"{all_lib_result_path}", "_test_full");
-        assert_eq!(res.0, res.1);
-    }}
-    "#
-        );
-        writeln!(&mut file, "{code}").unwrap();
-    } else {
-        missing.push(format!("[Notice] missing: {tpl_dir}{design_system}/tests/_libraries.html"));
-    }
-
-    // Add any other json payload from tests_path.
-    let walk_path = fs::read_dir(tests_path).unwrap();
+    let walk_path = fs::read_dir(&tests_path).unwrap();
     for entry in walk_path {
         let entry = entry.unwrap();
         let path = entry.path();
@@ -270,19 +190,19 @@ fn build_tests(design_system: &str) {
             .unwrap()
             .replace(".json", "");
 
-        if list_payload.contains(&name) {
-            continue;
-        }
+        // println!("cargo::warning=[DEBUG] build test: {name}");
 
-        println!("[DEBUG] custom: {name}");
+        let payload_path = format!("{tests_path}/{name}.json");
+        let result_path = format!("{tests_path}/{name}.html");
 
-        let payload_path = format!("{root}/{tpl_dir}{design_system}/tests/{name}.json");
-        let result_path = format!("{root}/{tpl_dir}{design_system}/tests/{name}.html");
+        // println!("cargo::warning=[DEBUG] {payload_path}");
+        // println!("cargo::warning=[DEBUG] {result_path}");
 
+        let fn_name = name.replace("_", "").replace("--", "_").replace("-", "_");
         let code = format!(
             r#"
     #[test]
-    fn test_{design_system}_{name} () {{
+    fn test_{design_system}_{fn_name} () {{
         let res = utils::test_ds_generic_diff(&"{payload_path}", &"{result_path}", "_test");
         assert_eq!(res.0, res.1);
     }}
@@ -290,10 +210,4 @@ fn build_tests(design_system: &str) {
         );
         writeln!(&mut file, "{code}").unwrap();
     }
-
-    writeln!(&mut file, "#[test]\nfn test_{design_system}_skip () {{\n").unwrap();
-    for msg in missing {
-        writeln!(&mut file, "\nprintln!(\"{msg}\");\n").unwrap();
-    }
-    writeln!(&mut file, "\n}}").unwrap();
 }

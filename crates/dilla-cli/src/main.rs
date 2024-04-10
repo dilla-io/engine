@@ -20,7 +20,6 @@
 use clap::{Parser, Subcommand};
 use dilla_describer::describe as dilla_describe;
 use dilla_renderer::{render as dilla_render, DESIGN_SYSTEM};
-use html_minifier::HTMLMinifier;
 use html_parser::Dom;
 use std::fs;
 use std::path::PathBuf;
@@ -193,7 +192,7 @@ fn format_dom_json(s: String) -> String {
 
 #[doc(hidden)]
 fn format_minify(s: String) -> String {
-    let mut html_minifier = HTMLMinifier::new();
+    let mut html_minifier = html_minifier::HTMLMinifier::new();
     html_minifier.set_remove_comments(false);
     html_minifier.digest(s.clone()).unwrap();
 

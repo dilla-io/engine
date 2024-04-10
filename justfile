@@ -7,6 +7,7 @@
 _default:
 	@ just --list --unsorted
 
+set dotenv-filename := ".env.default"
 set dotenv-load
 
 alias b := build
@@ -133,8 +134,8 @@ sync-all:
 	@./scripts/sync.sh all_ds
 
 # [test] All internal renderer tests
-test-int:
-	@ RUST_BACKTRACE=0 ./scripts/test.sh int
+test-int test='':
+	@ RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests_core -- --exact --nocapture {{test}}
 
 # [test] specific DS test without build
 test ds:
@@ -203,6 +204,6 @@ docker-login:
 
 # [docker] Pull Dilla images locally
 docker-pull:
-	@ docker pull registry.gitlab.com/dilla-io/dilla-rust:latest
-	@ docker pull registry.gitlab.com/dilla-io/prebuilder:latest
-	@ docker pull registry.gitlab.com/dilla-io/schemas:latest
+	@ docker pull $DILLA_DOCKER_RUST
+	@ docker pull $DILLA_DOCKER_SCHEMAS
+	@ docker pull $DILLA_DOCKER_PREBUILDER
