@@ -73,12 +73,7 @@ pub fn render(payload: &str, output: &str) -> Result<String, Error> {
 /// * `Result<String, Error>` - A Result containing the rendered JSON output as a String if successful, or an Error if any error occurs.
 ///
 pub fn render_string(payload: String) -> Result<String, Error> {
-    let json: serde_json::Value = serde_json::from_str::<serde_json::Value>(&payload)?;
-
-    let mut renderer: Renderer = Renderer::new();
-    renderer.render(&json);
-
-    Ok(renderer.to_output_string("json"))
+    Ok(render(&payload, "json")?)
 }
 
 /// Render a Json Object into json Object.
@@ -96,9 +91,4 @@ pub fn render_obj(json: &serde_json::Value) -> serde_json::Value {
     renderer.render(json);
 
     renderer.to_output()
-}
-
-#[doc(hidden)]
-pub fn _print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
 }

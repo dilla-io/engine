@@ -30,76 +30,39 @@ pub struct RendererWrapper {
 
 impl RendererWrapper {
     pub fn new() -> Self {
-        RendererWrapper {
-            body: String::new(),
-            head: String::new(),
-            style: String::new(),
-            system_stylesheet: String::new(),
-            system_javascript_src: IndexMap::new(),
-            stylesheet: String::new(),
-            javascript_src: IndexMap::new(),
-            system_javascript: String::new(),
-            javascript: String::new(),
-        }
+        RendererWrapper::default()
     }
 
     pub fn add_body(&mut self, body: &str) {
-        self.body.push_str(body);
-    }
-
-    pub fn add_body_nl(&mut self, body: &str) {
-        if body.is_empty() {
-            return;
-        }
-        self.body.push('\n');
-        self.body.push_str(body);
+        self.body.push_str(&format!("\n{}", body));
     }
 
     pub fn add_head(&mut self, head: &str) {
-        if head.is_empty() {
-            return;
-        }
-        self.head.push('\n');
-        self.head.push_str(head);
+        self.head.push_str(&format!("\n{}", head));
     }
 
     pub fn add_style(&mut self, style: &str) {
-        if style.is_empty() {
-            return;
-        }
-        self.style.push('\n');
-        self.style.push_str(style);
+        self.style.push_str(&format!("\n{}", style));
     }
 
     pub fn add_system_stylesheet(&mut self, stylesheet: &str) {
-        if stylesheet.is_empty() {
-            return;
-        }
-        self.system_stylesheet.push('\n');
-        self.system_stylesheet.push_str(stylesheet);
+        self.system_stylesheet.push_str(&format!("\n{}", stylesheet));
     }
 
     pub fn add_system_javascript(&mut self, script: &str) {
-        self.system_javascript.push('\n');
-        self.system_javascript.push_str(script);
+        self.system_javascript.push_str(&format!("\n{}", script));
     }
 
     pub fn add_system_javascript_src(&mut self, script_url: &str, data: Value) {
-        self.system_javascript_src
-            .insert(script_url.to_string(), data);
+        self.system_javascript_src.insert(script_url.to_string(), data);
     }
 
     pub fn add_stylesheet(&mut self, stylesheet: &str) {
-        if stylesheet.is_empty() {
-            return;
-        }
-        self.stylesheet.push('\n');
-        self.stylesheet.push_str(stylesheet);
+        self.stylesheet.push_str(&format!("\n{}", stylesheet));
     }
 
     pub fn add_javascript(&mut self, script: &str) {
-        self.javascript.push('\n');
-        self.javascript.push_str(script);
+        self.javascript.push_str(&format!("\n{}", script));
     }
 
     pub fn add_javascript_src(&mut self, script_url: &str, data: Value) {
@@ -114,7 +77,7 @@ impl RendererWrapper {
 
     fn build_system_library(&mut self) -> &mut Self {
         // Get libraries defined by the design system (always loaded).
-        let default_css: &str = DEFINITION.default_libraries_css_html;
+        let default_css = DEFINITION.default_libraries_css_html;
         self.add_system_stylesheet(default_css);
 
         for (url, phf_attributes) in DEFINITION.default_libraries_js.iter() {
@@ -136,7 +99,7 @@ impl RendererWrapper {
     }
 
     fn build_bubbable(&mut self, bubbable: Bubbable) -> &mut Self {
-        let css: String = bubbable.library.css.join("\n");
+        let css = bubbable.library.css.join("\n");
         self.add_stylesheet(&css);
 
         for (url, attributes) in bubbable.library.js {
@@ -147,10 +110,10 @@ impl RendererWrapper {
             self.add_javascript_src(&url, attributes);
         }
 
-        let attached_build: String = bubbable.attached_build.clone();
+        let attached_build = bubbable.attached_build.clone();
         self.add_head(&attached_build);
 
-        let style: String = bubbable.style;
+        let style = bubbable.style;
         if !style.is_empty() {
             self.add_style(&style);
         }
@@ -158,7 +121,6 @@ impl RendererWrapper {
         self
     }
 }
-
 /// Simple render struct to process the data.
 #[derive(Debug, Default)]
 pub(crate) struct Renderer {
@@ -219,7 +181,7 @@ impl Renderer {
                     let ctx = context! { _translation => self.translation };
                     let mut renderable = Renderable::new(obj.to_owned());
                     renderable.build_with_env(env, ctx);
-                    self.output.add_body_nl(&renderable.to_html_string());
+                    self.output.add_body(&renderable.to_html_string());
                 }
                 _ => {
                     // @todo [devtools] log something
