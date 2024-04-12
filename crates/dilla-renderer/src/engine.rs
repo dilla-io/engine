@@ -15,8 +15,6 @@ use rand::{thread_rng, Rng};
 
 use serde_json::Map;
 
-include!(concat!(env!("OUT_DIR"), "/codegen_templates.rs"));
-
 /// Initializes a Jinja environment with various filters, functions, globals,
 /// and sets a formatter to render Maps in templates.
 /// Goal is to instantiate only once the env for the whole payload request.
@@ -36,11 +34,7 @@ pub(crate) fn init_jinja_environnement() -> Environment<'static> {
 
     env.set_auto_escape_callback(|_| AutoEscape::Html);
 
-    for (name, tpl) in TEMPLATES.into_iter() {
-        env.add_template(name, tpl).unwrap_or_else(|error| {
-            println!("<!-- [Error] {}.jinja: {} -->", name, error);
-        });
-    }
+    minijinja_embed::load_templates!(&mut env);
 
     env.add_filter("t", t);
     env.add_filter("split", split);

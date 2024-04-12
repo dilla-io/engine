@@ -25,6 +25,7 @@ minijinja = { version = "1.0", default-features = false, features = [
   "macros",
   "speedups",
 ] }
+minijinja-embed = "1.0"
 rand = { version = "0.8", default-features = false, features = [
   "std",
   "std_rng",
@@ -38,11 +39,12 @@ phf = { version = "0.11", features = ["macros"] }
 [build-dependencies]
 const-gen = "1.6"
 dotenv = "0.15"
+minijinja-embed = "1.0"
 phf_codegen = "0.11"
 walkdir = "2.5"
 
 [dev-dependencies]
 html-minifier = "^5.0"
+pretty_assertions = "^1.4"
 similar-asserts = "^1.5"
 walkdir = "^2.5"
-pretty_assertions = "^1.4"

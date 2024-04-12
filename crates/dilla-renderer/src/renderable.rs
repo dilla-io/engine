@@ -156,13 +156,24 @@ impl Renderable {
         //     minijinja::value::Value::from_object(component.attributes()),
         // );
 
-        let template = env.get_template(self.component_template.as_str());
+        // Name of the template is from macro minijinja_embed::embed_templates!, it store path and name with extension.
+        let mut template_name = format!(
+            "{}/{}.jinja",
+            self.component_template.as_str(),
+            self.component_template.as_str()
+        );
+        if DEFINITION.design_system == "test" {
+            template_name = format!("{}.jinja", self.component_template.as_str());
+        }
+
+        let template = env.get_template(&template_name);
+
         if template.is_err() {
             #[cfg(feature = "debug")]
             println!("<!-- Debug\n{:?}\n-->", &env);
             return format!(
                 "<!-- [Error] component: {}, template not found: {} -->",
-                self.component_name, self.component_template
+                self.component_name, template_name
             );
         }
 
