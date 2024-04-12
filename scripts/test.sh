@@ -118,38 +118,47 @@ __gen() {
   _log_info "Gen DS: ${DS} tests into ${DILLA_INPUT_DIR}/${DS}..."
 
   _ds_path="${DILLA_OUTPUT_DIR}/${DS}/"
+  _origin_path="${DILLA_INPUT_DIR}/${DS}/"
 
   if ! [[ -d "${_ds_path}" ]]; then
     _log_error "Input dir not found at ${_ds_path}."
     _exit_1
   fi
 
-  __gen_tests "${_ds_path}"
-  __gen_examples "${_ds_path}"
+  __gen_tests "${_ds_path}" "${_origin_path}"
+  __gen_examples "${_ds_path}" "${_origin_path}"
 }
 
 __gen_tests() {
   local _ds_path=${1-}
+  local _origin_path=${2-}
 
   for _file in "${_ds_path}tests/"*.json; do
     _full_name=$(basename "${_file%.*}")
     _output_file="${_ds_path}tests/${_full_name}.html"
+    _cp_file="${_origin_path}tests/${_full_name}.html"
 
     component="${_full_name%%--*}"
     preview="${_full_name#*--}"
 
     __do_gen "${component}:${preview}" "${_file}" "${_output_file}"
+    rm -f "${_cp_file}"
+    cp "${_output_file}" "${_cp_file}"
   done
 
 }
 __gen_examples() {
   local _ds_path=${1-}
+  local _origin_path=${2-}
 
   for _file in "${_ds_path}examples/"*.json; do
     _full_name=$(basename "${_file%.*}")
     _output_file="${_ds_path}examples/${_full_name}.html"
+    _cp_file="${_origin_path}tests/${_full_name}.html"
 
     __do_gen "${_full_name}" "${_file}" "${_output_file}" "full"
+    rm -f "${_cp_file}"
+    cp "${_output_file}" "${_cp_file}"
   done
 }
 
