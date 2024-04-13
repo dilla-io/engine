@@ -385,8 +385,8 @@ impl Attribute {
     /// assert!(!attribute.has_attribute("unknown".into()));
     /// ```
     pub fn add_attr_from_serde(&mut self, values: &serde_json::Value) {
-        let jinja_attributes: minijinja::value::Value =
-            minijinja::value::Value::from_serializable(&values);
+        let jinja_attributes: minijinja::Value =
+            minijinja::Value::from_serializable(&values);
         self.add_attrs_from_jinja(&jinja_attributes);
     }
 

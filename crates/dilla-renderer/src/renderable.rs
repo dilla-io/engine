@@ -146,7 +146,7 @@ impl Renderable {
     fn render_component(&mut self, env: &mut Environment, ctx: minijinja::Value) -> String {
         // Merge context values to have translation and fields.
         // @todo have fields directly as minijinja::value?
-        let ctx_fields = minijinja::value::Value::from_serializable(&self.fields);
+        let ctx_fields = minijinja::Value::from_serializable(&self.fields);
         let ctx = context! { ..ctx, ..ctx_fields };
 
         // Add attributes object to the template for manipulation and functions.
@@ -187,7 +187,7 @@ impl Renderable {
         let template = env.get_template("inline").unwrap();
 
         // Merge context values to have translation and fields.
-        let ctx_fields = minijinja::value::Value::from_serializable(&self.data);
+        let ctx_fields = minijinja::Value::from_serializable(&self.data);
         let ctx = context! { ..ctx, ..ctx_fields };
 
         let output = template.render(&ctx).unwrap();

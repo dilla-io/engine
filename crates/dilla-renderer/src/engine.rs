@@ -26,8 +26,8 @@ use serde_json::Map;
 pub(crate) fn init_jinja_environnement() -> Environment<'static> {
     let mut env: Environment = Environment::new();
 
-    #[cfg(feature = "debug")]
-    env.set_debug(true);
+    // #[cfg(feature = "debug")]
+    // env.set_debug(true);
 
     // @todo estimate if better?
     // env.set_undefined_behavior(UndefinedBehavior::Chainable);

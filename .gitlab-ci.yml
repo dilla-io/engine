@@ -36,7 +36,7 @@ coverage:
   stage: test
   cache: *cache_rust
   script:
-    - cd crates/dilla-renderer && cargo tarpaulin --out Xml
+    - cd crates/dilla-renderer && cargo tarpaulin --no-default-features --test tests_core --out Xml
   artifacts:
     when: always
     reports:
@@ -44,10 +44,11 @@ coverage:
         coverage_format: cobertura
         path: cobertura.xml
   coverage: '/\d+\.\d+% coverage, /'
-  only:
-    - tags
-  except:
-    - branches
+  # only:
+  #   - tags
+  # except:
+  #   - branches
+  when: manual
 
 .lint:
   stage: test

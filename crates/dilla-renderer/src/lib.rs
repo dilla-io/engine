@@ -73,7 +73,7 @@ pub fn render(payload: &str, output: &str) -> Result<String, Error> {
 /// * `Result<String, Error>` - A Result containing the rendered JSON output as a String if successful, or an Error if any error occurs.
 ///
 pub fn render_string(payload: String) -> Result<String, Error> {
-    Ok(render(&payload, "json")?)
+    render(&payload, "json")
 }
 
 /// Render a Json Object into json Object.

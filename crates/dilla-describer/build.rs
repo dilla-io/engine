@@ -28,7 +28,7 @@ fn main() {
 
     writeln!(
         &mut file,
-        "#[allow(dead_code)]\nstatic DEFINITIONS: &'static str = {};",
+        "#[allow(dead_code,clippy::redundant_static_lifetimes)]\nstatic DEFINITIONS: &'static str = {};",
         format!("include_str!(\"{definitions_path}\")").as_str(),
     )
     .unwrap();

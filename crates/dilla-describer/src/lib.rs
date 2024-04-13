@@ -1,4 +1,3 @@
-// #![allow(unused)]
 //! <div align=center>
 //!   <img src="https://data.dilla.io/dilla.png" alt="" width=320>
 //!   <p><strong>Share your design system in a tiny universal package.</strong></p>

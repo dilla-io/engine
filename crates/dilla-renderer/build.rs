@@ -1,3 +1,5 @@
+#![allow(clippy::useless_format,clippy::type_complexity)]
+
 #[path = "src/build/ds.rs"]
 mod ds;
 
@@ -70,6 +72,7 @@ struct SystemConfig {
     pub libraries_css_html: HashMap<&'static str, &'static str>,
 
     // Used for library js url on json output.
+    #[allow(clippy::type_complexity)]
     pub libraries_js:
         HashMap<&'static str, Vec<(&'static str, HashMap<&'static str, &'static str>)>>,
     pub libraries_keys: Vec<&'static str>,
@@ -86,11 +89,16 @@ fn build_config(config: SystemConfig) {
     let dest_path: std::path::PathBuf = Path::new(&out_dir).join("codegen_config.rs");
 
     let contents: String = [
+        format!("#[doc = \"The current Design System name.\"]"),
+        format!("#[allow(clippy::redundant_static_lifetimes)]"),
         // @todo should merge or remove to use DS?
-        const_declaration!(#[doc = "The current Design System name."] pub DESIGN_SYSTEM = config.design_system),
-        // const_definition!(#[doc = "Support the whole Design system configuration."] #[derive(Debug)] pub(crate) SystemConfig),
-        const_definition!(#[doc = "Support the whole Design system configuration."] #[allow(dead_code)] pub(crate) SystemConfig),
-        const_declaration!(#[doc = "The current Design System configuration."] pub(crate) DEFINITION = config),
+        const_declaration!(pub DESIGN_SYSTEM = config.design_system),
+        format!("#[doc = \"Support the whole Design system configuration.\"]"),
+        format!("#[derive(Debug)]"),
+        format!("#[allow(dead_code,clippy::type_complexity)]"),
+        const_definition!(pub(crate) SystemConfig),
+        format!("#[doc = \"The current Design System configuration.\"]"),
+        const_declaration!(pub(crate) DEFINITION = config),
     ]
     .join("\n");
 
@@ -128,12 +136,12 @@ fn build_tests(design_system: &str, ds_path: &str, root_path: &str) {
         let payload_path = format!("{tests_path}/{name}.json");
         let result_path = format!("{tests_path}/{name}.html");
 
-        let fn_name = name.replace("_", "").replace("--", "_").replace("-", "_");
+        let fn_name = name.replace('_', "").replace("--", "_").replace('-', "_");
         let code = format!(
             r#"
     #[test]
     fn test_{design_system}_{fn_name} () {{
-        let res = utils::test_ds_generic_diff(&"{payload_path}", &"{result_path}", "_test");
+        let res = utils::test_ds_generic_diff("{payload_path}", "{result_path}", "_test");
         assert_eq!(res.0, res.1);
     }}
     "#

@@ -180,7 +180,7 @@ pub fn test_ds_generic_diff(payload_json_path: &str, result_path: &str, output: 
     let result_trim = trim_whitespace(&result);
     let expected = trim_whitespace(&load_ds_file(result_path));
 
-    return (expected, result_trim);
+    (expected, result_trim)
 }
 
 fn load(name: &str, dir: &str, suffix_expected: &str) -> (String, String) {
@@ -210,7 +210,7 @@ fn load_file(name: &str, dir: &str, suffix_expected: &str) -> String {
 
 fn load_ds_file(filename: &str) -> String {
     let mut contents = String::new();
-    File::open(&filename)
+    File::open(filename)
         .unwrap_or_else(|_| panic!("File not found: {}", filename))
         .read_to_string(&mut contents)
         .unwrap_or_else(|_| panic!("Failed to read file: {}", filename));
