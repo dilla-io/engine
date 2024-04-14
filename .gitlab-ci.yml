@@ -36,6 +36,7 @@ coverage:
   stage: test
   cache: *cache_rust
   script:
+    - cp crates/dilla-renderer/src/build/ds_base.rs crates/dilla-renderer/src/build/ds.rs
     - cd crates/dilla-renderer && cargo tarpaulin --no-default-features --test tests_core --out Xml
   artifacts:
     when: always
