@@ -709,3 +709,65 @@ fn convert_to_map(value: &minijinja::Value) -> Map<String, serde_json::Value> {
     let json = serde_json::to_string(value).unwrap();
     serde_json::from_str(&json).unwrap()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::{json, Map};
+
+    #[test]
+    fn test_renderable_new() {
+        let data = Map::new();
+        let renderable = Renderable::new(data);
+        assert_eq!(renderable.output, "");
+        assert_eq!(renderable.renderable_type, RenderableType::Unknown);
+    }
+
+    #[test]
+    fn test_output() {
+        let renderable = Renderable::new(Map::new());
+        assert_eq!(renderable.output(), "");
+    }
+
+    #[test]
+    fn test_build() {
+        let mut renderable = Renderable::new(Map::new());
+        renderable.build();
+        assert_eq!(renderable.output, "[Warn] no render for: Unknown");
+    }
+
+    #[test]
+    fn test_render_element_void() {
+        let mut renderable = Renderable::new(Map::new());
+        renderable.set_type(RenderableType::Element);
+        renderable.set_tag("img".to_string());
+        renderable.render();
+        assert!(renderable.output.contains("/>"));
+    }
+
+    #[test]
+    fn test_render_element_non_void() {
+        let mut renderable = Renderable::new(Map::new());
+        renderable.set_type(RenderableType::Element);
+        renderable.set_tag("div".to_string());
+        renderable.set_element_content_string();
+        renderable.render();
+        assert!(renderable.output.contains("</div>"));
+    }
+
+    #[test]
+    fn test_link() {
+        let attrs = json!({"id": "link1"});
+        let link = Renderable::link("http://example.com", &attrs);
+        assert!(link.output.contains("href=\"http://example.com\""));
+        assert!(link.output.contains("id=\"link1\""));
+    }
+
+    #[test]
+    fn test_script() {
+        let attrs = json!({"async": true});
+        let script = Renderable::script("http://example.com/script.js", &attrs);
+        assert!(script.output.contains("src=\"http://example.com/script.js\""));
+        assert!(script.output.contains("async"));
+    }
+}

@@ -25,6 +25,7 @@ release/
 .trunk
 .cargo
 Cargo.lock
+tarpaulin-report.html
 
 # Node
 node_modules

@@ -135,23 +135,18 @@ sync-all:
 
 # [test] All internal renderer tests
 test-int test='':
-	@ RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests_core -- --exact --nocapture {{test}}
+	@ RUST_BACKTRACE=0 DS=test cargo test --no-default-features --package dilla-renderer -- --exact --nocapture {{test}}
 
-# [test] specific DS test without build
-test ds:
-	@./scripts/test.sh run {{ds}} --no-build
+# [test] All internal renderer tests coverage
+test-int-cov out="Stdout":
+	@ RUST_BACKTRACE=0 DS=test cargo tarpaulin --workspace -e wasm-* -e dilla-cli --exclude-files **/bindings.rs --exclude-files **/tests/** -o {{out}}
 
 # [test] specific DS test (must have tests in ./run/DS/tests)
-test-b ds:
+test ds:
 	@./scripts/test.sh run {{ds}}
 
 # [test] specific DS test with pre-build and build (must have tests in ./run_dr_src/DS/tests)
 test-pb ds:
-	@./scripts/pre_build.sh run {{ds}} --skip-check --skip-pull
-	@./scripts/test.sh run {{ds}}
-
-# [test] Pre build and run test for a specific DS
-pbt ds:
 	@./scripts/pre_build.sh run {{ds}} --skip-check --skip-pull
 	@./scripts/test.sh run {{ds}}
 

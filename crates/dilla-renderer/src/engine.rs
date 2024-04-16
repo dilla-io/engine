@@ -49,8 +49,6 @@ pub(crate) fn init_jinja_environnement() -> Environment<'static> {
     env.add_filter("remove_attribute", remove_attribute);
     env.add_filter("merge", merge);
 
-    env.add_filter("to_int", to_int);
-
     env.add_function("create_attribute", create_attribute);
 
     env.add_global(
@@ -199,27 +197,6 @@ pub fn create_attribute(
     }
 
     Ok(minijinja::value::Value::from_object(Attribute::new()))
-}
-
-/// Create an int from a String or a float.
-///
-/// @deprecated not used anymore in Twig, but perhaps we could keep.
-///
-/// ```jinja
-/// {{ "42.57"|to_int }}
-///  -> 42.57
-/// ```
-///
-pub fn to_int(v: minijinja::Value) -> Result<minijinja::Value, Error> {
-    match v.kind() {
-        ValueKind::Number | ValueKind::String => {
-            let float: f64 = v.to_string().parse().unwrap();
-            // let int = float.round() as i32; // To round up?
-            let int = float as i32;
-            Ok(minijinja::Value::from(int))
-        }
-        _ => Ok(v),
-    }
 }
 
 /// Translate a string.

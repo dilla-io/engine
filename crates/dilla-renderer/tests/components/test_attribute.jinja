@@ -23,8 +23,13 @@ Template: test_attribute.jinja
   'aria-expanded': 'false'
 } %}
 {{ test }}
+{{ test|has_class('foo') }}
+{{ test|has_class('other') }}
 {% set test2 = test|set_attribute("href", "#")|add_class('other') %}
 {{ test2 }}
+{{ test2|has_class('foo') }}
+{{ test2|has_class('other') }}
+{{ test2|has_class('none') }}
 -- component --
 {{
   {

@@ -727,6 +727,39 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_has_class_present() {
+        let mut attribute = Attribute::new();
+        attribute.add_attr("class", vec!["example", "test"]);
+    
+        assert!(attribute.has_class(minijinja::value::Value::from("test")));
+    }
+    
+    #[test]
+    fn test_has_class_absent() {
+        let mut attribute = Attribute::new();
+        attribute.add_attr("class", vec!["example"]);
+    
+        assert!(!attribute.has_class(minijinja::value::Value::from("missing")));
+    }
+
+    #[test]
+    fn test_get_attr_existing() {
+        let mut attribute = Attribute::new();
+        attribute.add_attr("class", vec!["btn", "active"]);
+
+        let class_attrs = attribute.get_attr("class");
+        assert_eq!(class_attrs, &["btn", "active"]);
+    }
+
+    #[test]
+    fn test_get_attr_non_existing() {
+        let attribute = Attribute::new();
+
+        let class_attrs = attribute.get_attr("class");
+        assert!(class_attrs.is_empty());
+    }
+
+    #[test]
     fn test_add_attr_single_value() {
         let mut attribute = Attribute::new();
         attribute.add_attr("class", vec!["btn"]);

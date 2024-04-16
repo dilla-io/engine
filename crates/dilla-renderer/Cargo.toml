@@ -15,6 +15,7 @@ default = ["random"]
 random = []
 profiling = []
 debug = []
+test_ds = []
 
 [dependencies]
 cfg-if = "1.0"

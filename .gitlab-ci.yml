@@ -24,8 +24,7 @@ test:
   cache: *cache_rust
   script:
     - rm -f crates/dilla-renderer/src/build/ds.rs && cp crates/dilla-renderer/src/build/test.rs crates/dilla-renderer/src/build/ds.rs
-    - RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --test tests_core --no-fail-fast -- --exact --nocapture
-    - RUST_BACKTRACE=0 DS=test cargo test --doc -p dilla-renderer --no-fail-fast -- --exact --nocapture
+    - RUST_BACKTRACE=0 DS=test cargo test --package dilla-renderer --no-default-features -- --exact --nocapture
   # only:
     # - merge_requests
   only:
@@ -37,7 +36,7 @@ coverage:
   cache: *cache_rust
   script:
     - cp crates/dilla-renderer/src/build/ds_base.rs crates/dilla-renderer/src/build/ds.rs
-    - cd crates/dilla-renderer && cargo tarpaulin --no-default-features --test tests_core --out Xml
+    - RUST_BACKTRACE=0 DS=test cargo tarpaulin --workspace -e wasm-* -e dilla-cli --exclude-files **/bindings.rs --exclude-files **/tests/** -o Xml
   artifacts:
     when: always
     reports:

@@ -1,4 +1,5 @@
 #![allow(unused)]
+#[no_coverage]
 
 cfg_if::cfg_if! {
     if #[cfg(not(target_family = "wasm"))] {

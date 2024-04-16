@@ -143,7 +143,7 @@ fn test_generic_diff(name: &str, dir: &str, output: &str, suffix_expected: &str)
     if data.0.is_empty() {
         return;
     }
-
+ 
     let result = dilla_render(data.0.as_str(), output);
 
     // assert_str_trim_all_eq!(
@@ -183,7 +183,7 @@ pub fn test_ds_generic_diff(payload_json_path: &str, result_path: &str, output: 
     (expected, result_trim)
 }
 
-fn load(name: &str, dir: &str, suffix_expected: &str) -> (String, String) {
+pub fn load(name: &str, dir: &str, suffix_expected: &str) -> (String, String) {
     let root = env::var("CARGO_MANIFEST_DIR").expect("Failed to get directory");
     let filename = format!("{root}/tests/{dir}/{name}{suffix_expected}");
     let html_exist = std::path::Path::new(&filename).exists();
@@ -219,7 +219,7 @@ fn load_ds_file(filename: &str) -> String {
 
 // https://stackoverflow.com/questions/71864137/whats-the-ideal-way-to-trim-extra-spaces-from-a-string
 #[allow(dead_code)]
-fn trim_whitespace(s: &str) -> String {
+pub fn trim_whitespace(s: &str) -> String {
     // let mut new_str = s.trim().to_owned();
 
     // // Some arbitrary replace.

@@ -88,7 +88,7 @@ __test() {
   _cp_ds
   _log_debug "Run tests: test_${DS}..."
 
-  DS=${DS} cargo test -p dilla-renderer --no-default-features --test tests_integrations -- --exact --nocapture || true
+  DS=${DS} cargo test -p dilla-renderer --no-default-features -F test_ds --test tests_integrations -- --exact --nocapture || true
 }
 
 __test_docker() {

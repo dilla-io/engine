@@ -193,7 +193,7 @@ impl Renderer {
 }
 
 impl Output for Renderer {
-    // @todo deprecate as we want to work only with serde_json::Value or minijinja::value::Value
+    // @todo ideally we want to work only with serde_json::Value or minijinja::value::Value
     fn to_output_string(&self, output: &str) -> String {
         let mut style: String = "".to_string();
         if !self.output.style.is_empty() {
@@ -286,5 +286,84 @@ pub trait Output: std::fmt::Debug {
 impl std::fmt::Display for dyn Output {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.to_output_string("full"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn test_full_output() {
+        let mut renderer = Renderer::new();
+        let json_input = json!([
+            {
+                "@element": "span",
+                "@content": "Hello, world!"
+            },
+            {
+                "@attached": [
+                    {
+                      "@element": "meta",
+                      "name": "test"
+                    }
+                ]
+            }
+        ]);
+
+        renderer.render(&json_input);
+        let output = renderer.to_output_string("full");
+
+        let expected = "<!DOCTYPE html><html><head><meta name=\"test\" /><link type=\"text/css\" rel=\"stylesheet\" href=\"default-1.css\" crossorigin=\"anonymous\"><link type=\"text/css\" rel=\"stylesheet\" href=\"default-2.css\" crossorigin=\"anonymous\"></head><body><span>Hello, world!</span><script src=\"default-1.js\" async=\"true\"></script><script src=\"default-2.js\" async=\"true\"></script></body></html>";
+
+        assert_eq!(trim_whitespace(expected), trim_whitespace(&output));
+    }
+
+    #[test]
+    fn test_json_output() {
+        let mut renderer = Renderer::new();
+        let json_input = json!([
+            {
+                "@element": "span",
+                "@content": "Hello, world!"
+            },
+            {
+                "@attached": [
+                    {
+                      "@element": "meta",
+                      "name": "test"
+                    }
+                ]
+            }
+        ]);
+    
+        renderer.render(&json_input);
+        let output = renderer.to_output_string("json");
+
+        let expected = json!({
+            "attached": "\n<meta name=\"test\" />\n",
+            "body": "\n<span>\nHello, world!</span>\n",
+            "system_stylesheet": "\n<link type=\"text/css\" rel=\"stylesheet\" href=\"default-1.css\" crossorigin=\"anonymous\">\n<link type=\"text/css\" rel=\"stylesheet\" href=\"default-2.css\" crossorigin=\"anonymous\">",
+            "system_javascript": {
+                "default-1.js": {
+                    "async": "true"
+                },
+                "default-2.js": {
+                    "async": "true"
+                }
+            },
+            "stylesheet": "\n",
+            "javascript": {},
+            "variables": ""
+        });
+        let output_value: serde_json::Value = serde_json::from_str(&output).unwrap();
+        assert_eq!(expected, output_value);
+    }
+
+    fn trim_whitespace(s: &str) -> String {
+        s
+            .replace('\n', "")
+            .replace("  ", "")
     }
 }
