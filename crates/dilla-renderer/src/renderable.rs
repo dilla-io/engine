@@ -723,7 +723,10 @@ mod tests {
             unreachable!();
         };
         let minijinja_value = minijinja::Value::from_serialize(&data);
-        assert!(is_renderable(&minijinja_value), "Expected the value to be renderable when it contains a element key.");
+        assert!(
+            is_renderable(&minijinja_value),
+            "Expected the value to be renderable when it contains a element key."
+        );
 
         let serde_json::Value::Object(data) = json!({
             format!("{KEY_PREFIX}{KEY_COMPONENT}"): "foo",
@@ -731,7 +734,10 @@ mod tests {
             unreachable!();
         };
         let minijinja_value = minijinja::Value::from_serialize(&data);
-        assert!(is_renderable(&minijinja_value), "Expected the value to be renderable when it contains a component key.");
+        assert!(
+            is_renderable(&minijinja_value),
+            "Expected the value to be renderable when it contains a component key."
+        );
 
         let serde_json::Value::Object(data) = json!({
             format!("{KEY_PREFIX}{KEY_TEMPLATE}"): "foo",
@@ -739,21 +745,27 @@ mod tests {
             unreachable!();
         };
         let minijinja_value = minijinja::Value::from_serialize(&data);
-        assert!(is_renderable(&minijinja_value), "Expected the value to be renderable when it contains a template key.");
+        assert!(
+            is_renderable(&minijinja_value),
+            "Expected the value to be renderable when it contains a template key."
+        );
     }
 
     #[test]
     fn test_is_renderable_false() {
-    //     let serde_json::Value::Object(data) = json!({
-    //         format!("{KEY_PREFIX}other"): "foo",
-    //     }) else {
-    //         unreachable!();
-    //     };
-    //     let minijinja_value = minijinja::Value::from_serialize(&data);
-    //     assert!(!is_renderable(&minijinja_value), "Expected the value to not be renderable when it contains a foreign key.");
+        //     let serde_json::Value::Object(data) = json!({
+        //         format!("{KEY_PREFIX}other"): "foo",
+        //     }) else {
+        //         unreachable!();
+        //     };
+        //     let minijinja_value = minijinja::Value::from_serialize(&data);
+        //     assert!(!is_renderable(&minijinja_value), "Expected the value to not be renderable when it contains a foreign key.");
 
-        assert!(!is_renderable(&minijinja::Value::from("")), "Expected the value to not be renderable when it contains no data.");
-    } 
+        assert!(
+            !is_renderable(&minijinja::Value::from("")),
+            "Expected the value to not be renderable when it contains no data."
+        );
+    }
 
     #[test]
     fn displaying_string_as_html_returns_string_itself() {
@@ -772,7 +784,7 @@ mod tests {
     #[test]
     fn displaying_str_as_itself_display() {
         let html_content = "Hello, HTML!";
-        let display_output = format!("{}", html_content.to_html_string());
+        let display_output = html_content.to_html_string().to_string();
         assert_eq!(display_output, "Hello, HTML!");
     }
 

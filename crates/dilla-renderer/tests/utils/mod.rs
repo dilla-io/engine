@@ -72,18 +72,17 @@ pub fn test_ds_loop(ds: &str, dir: &str, output: &str, suffix_expected: &str) {
         return;
     }
 
-    for entry in WalkDir::new(preview_path).into_iter().filter_map(|e| e.ok()) {
+    for entry in WalkDir::new(preview_path)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
         let path = entry.path();
 
         if !path.is_dir() {
             continue;
         }
 
-        let name = path
-            .file_name()
-            .unwrap()
-            .to_str()
-            .unwrap_or_default();
+        let name = path.file_name().unwrap().to_str().unwrap_or_default();
 
         if (name == "components") {
             continue;
@@ -107,8 +106,7 @@ pub fn test_ds_loop(ds: &str, dir: &str, output: &str, suffix_expected: &str) {
             let result_trim = test_result.1;
 
             assert_eq!(
-                expected,
-                result_trim,
+                expected, result_trim,
                 "\n\n[TEST] {ds}/components/{name}/preview.json"
             );
         }
@@ -143,7 +141,7 @@ fn test_generic_diff(name: &str, dir: &str, output: &str, suffix_expected: &str)
     if data.0.is_empty() {
         return;
     }
- 
+
     let result = dilla_render(data.0.as_str(), output);
 
     // assert_str_trim_all_eq!(
@@ -163,7 +161,11 @@ fn test_generic_diff(name: &str, dir: &str, output: &str, suffix_expected: &str)
     );
 }
 
-pub fn test_ds_generic_diff(payload_json_path: &str, result_path: &str, output: &str) -> (String, String) {
+pub fn test_ds_generic_diff(
+    payload_json_path: &str,
+    result_path: &str,
+    output: &str,
+) -> (String, String) {
     let mut data = "".to_string();
     if std::path::Path::new(&payload_json_path).exists() {
         data = load_ds_file(payload_json_path);
@@ -171,8 +173,7 @@ pub fn test_ds_generic_diff(payload_json_path: &str, result_path: &str, output: 
             eprintln!("[SKIP] Empty payload file {payload_json_path}");
             return ("".to_string(), "".to_string());
         }
-    }
-    else {
+    } else {
         data = payload_json_path.to_string();
     }
 

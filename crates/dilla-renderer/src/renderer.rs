@@ -46,7 +46,8 @@ impl RendererWrapper {
     }
 
     pub fn add_system_stylesheet(&mut self, stylesheet: &str) {
-        self.system_stylesheet.push_str(&format!("\n{}", stylesheet));
+        self.system_stylesheet
+            .push_str(&format!("\n{}", stylesheet));
     }
 
     pub fn add_system_javascript(&mut self, script: &str) {
@@ -54,7 +55,8 @@ impl RendererWrapper {
     }
 
     pub fn add_system_javascript_src(&mut self, script_url: &str, data: Value) {
-        self.system_javascript_src.insert(script_url.to_string(), data);
+        self.system_javascript_src
+            .insert(script_url.to_string(), data);
     }
 
     pub fn add_stylesheet(&mut self, stylesheet: &str) {
@@ -197,11 +199,14 @@ impl Output for Renderer {
     fn to_output_string(&self, output: &str) -> String {
         let mut style: String = "".to_string();
         if !self.output.style.is_empty() {
-            style = format!(r#"
+            style = format!(
+                r#"
             <style>
                 {}
             </style>
-            "#, self.output.style);
+            "#,
+                self.output.style
+            );
         }
 
         let response: String = match output {
@@ -211,11 +216,9 @@ impl Output for Renderer {
                 {}
                 {}
                 "#,
-                self.output.body,
-                self.output.stylesheet,
-                self.output.javascript,
+                self.output.body, self.output.stylesheet, self.output.javascript,
             ),
-            "_test_full"=> format!(
+            "_test_full" => format!(
                 r#"
                 {}
                 {}
@@ -337,7 +340,7 @@ mod tests {
                 ]
             }
         ]);
-    
+
         renderer.render(&json_input);
         let output = renderer.to_output_string("json");
 
@@ -362,8 +365,6 @@ mod tests {
     }
 
     fn trim_whitespace(s: &str) -> String {
-        s
-            .replace('\n', "")
-            .replace("  ", "")
+        s.replace('\n', "").replace("  ", "")
     }
 }

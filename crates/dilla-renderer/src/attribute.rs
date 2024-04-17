@@ -385,8 +385,7 @@ impl Attribute {
     /// assert!(!attribute.has_attribute("unknown".into()));
     /// ```
     pub fn add_attr_from_serde(&mut self, values: &serde_json::Value) {
-        let jinja_attributes: minijinja::Value =
-            minijinja::Value::from_serialize(&values);
+        let jinja_attributes: minijinja::Value = minijinja::Value::from_serialize(values);
         self.add_attrs_from_jinja(&jinja_attributes);
     }
 
@@ -730,15 +729,15 @@ mod tests {
     fn test_has_class_present() {
         let mut attribute = Attribute::new();
         attribute.add_attr("class", vec!["example", "test"]);
-    
+
         assert!(attribute.has_class(minijinja::value::Value::from("test")));
     }
-    
+
     #[test]
     fn test_has_class_absent() {
         let mut attribute = Attribute::new();
         attribute.add_attr("class", vec!["example"]);
-    
+
         assert!(!attribute.has_class(minijinja::value::Value::from("missing")));
     }
 

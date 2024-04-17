@@ -1,4 +1,4 @@
-#![allow(clippy::useless_format,clippy::type_complexity)]
+#![allow(clippy::useless_format, clippy::type_complexity)]
 
 #[path = "src/build/ds.rs"]
 mod ds;
