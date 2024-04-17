@@ -386,7 +386,7 @@ impl Attribute {
     /// ```
     pub fn add_attr_from_serde(&mut self, values: &serde_json::Value) {
         let jinja_attributes: minijinja::Value =
-            minijinja::Value::from_serializable(&values);
+            minijinja::Value::from_serialize(&values);
         self.add_attrs_from_jinja(&jinja_attributes);
     }
 

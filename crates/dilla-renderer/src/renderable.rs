@@ -146,7 +146,7 @@ impl Renderable {
     fn render_component(&mut self, env: &mut Environment, ctx: minijinja::Value) -> String {
         // Merge context values to have translation and fields.
         // @todo have fields directly as minijinja::value?
-        let ctx_fields = minijinja::Value::from_serializable(&self.fields);
+        let ctx_fields = minijinja::Value::from_serialize(&self.fields);
         let ctx = context! { ..ctx, ..ctx_fields };
 
         // Add attributes object to the template for manipulation and functions.
@@ -187,7 +187,7 @@ impl Renderable {
         let template = env.get_template("inline").unwrap();
 
         // Merge context values to have translation and fields.
-        let ctx_fields = minijinja::Value::from_serializable(&self.data);
+        let ctx_fields = minijinja::Value::from_serialize(&self.data);
         let ctx = context! { ..ctx, ..ctx_fields };
 
         let output = template.render(&ctx).unwrap();
@@ -429,7 +429,7 @@ impl Html for Renderable {
 
 impl From<Renderable> for minijinja::Value {
     fn from(renderable: Renderable) -> Self {
-        minijinja::Value::from_serializable(&renderable)
+        minijinja::Value::from_serialize(&renderable)
     }
 }
 
@@ -553,13 +553,13 @@ pub fn add_class_to_json_component(
             }
             data.insert(key_attributes, json!({"class": classes}));
         }
-        return minijinja::Value::from_serializable(&data);
+        return minijinja::Value::from_serialize(&data);
     } else if data.contains_key(KEY_ATTRIBUTES) {
         KEY_ATTRIBUTES.to_string()
     } else if data.contains_key(&key_attributes) {
         key_attributes
     } else {
-        return minijinja::Value::from_serializable(&data);
+        return minijinja::Value::from_serialize(&data);
     };
 
     let attributes = data.get(&key_to_update).unwrap().as_object().unwrap();
@@ -570,7 +570,7 @@ pub fn add_class_to_json_component(
     data.remove(&key_to_update);
     data.insert(key_to_update, serde_json::Value::Object(new_data));
 
-    minijinja::Value::from_serializable(&data)
+    minijinja::Value::from_serialize(&data)
 }
 
 /// Adds a class attribute to a JSON component.
@@ -589,7 +589,7 @@ pub fn add_class_to_json_element(
 ) -> minijinja::Value {
     let mut data = convert_to_map(v);
     add_or_merge_attr(&mut data, "class", class);
-    minijinja::Value::from_serializable(&data)
+    minijinja::Value::from_serialize(&data)
 }
 
 /// Adds an attribute to a JSON component.
@@ -620,13 +620,13 @@ pub fn add_attr_to_json_component(
                 name: value_str
             }),
         );
-        return minijinja::Value::from_serializable(&data);
+        return minijinja::Value::from_serialize(&data);
     } else if data.contains_key(KEY_ATTRIBUTES) {
         key_to_update = KEY_ATTRIBUTES.to_string();
     } else if data.contains_key(&key_attributes) {
         key_to_update = key_attributes;
     } else {
-        return minijinja::Value::from_serializable(&data);
+        return minijinja::Value::from_serialize(&data);
     }
 
     let attributes = data.get(&key_to_update).unwrap().as_object().unwrap();
@@ -638,7 +638,7 @@ pub fn add_attr_to_json_component(
     data.remove(&key_to_update);
     data.insert(key_to_update, serde_json::Value::Object(new_data));
 
-    minijinja::Value::from_serializable(&data)
+    minijinja::Value::from_serialize(&data)
 }
 
 /// Adds an attribute to a JSON element.
@@ -663,7 +663,7 @@ pub fn add_attr_to_json_element(
     } else {
         data.insert(name, json!(value.unwrap().to_string()));
     }
-    minijinja::Value::from_serializable(&data)
+    minijinja::Value::from_serialize(&data)
 }
 
 fn add_or_merge_attr(
@@ -716,6 +716,67 @@ mod tests {
     use serde_json::{json, Map};
 
     #[test]
+    fn test_is_renderable_true() {
+        let serde_json::Value::Object(data) = json!({
+            format!("{KEY_PREFIX}{KEY_ELEMENT}"): "foo",
+        }) else {
+            unreachable!();
+        };
+        let minijinja_value = minijinja::Value::from_serialize(&data);
+        assert!(is_renderable(&minijinja_value), "Expected the value to be renderable when it contains a element key.");
+
+        let serde_json::Value::Object(data) = json!({
+            format!("{KEY_PREFIX}{KEY_COMPONENT}"): "foo",
+        }) else {
+            unreachable!();
+        };
+        let minijinja_value = minijinja::Value::from_serialize(&data);
+        assert!(is_renderable(&minijinja_value), "Expected the value to be renderable when it contains a component key.");
+
+        let serde_json::Value::Object(data) = json!({
+            format!("{KEY_PREFIX}{KEY_TEMPLATE}"): "foo",
+        }) else {
+            unreachable!();
+        };
+        let minijinja_value = minijinja::Value::from_serialize(&data);
+        assert!(is_renderable(&minijinja_value), "Expected the value to be renderable when it contains a template key.");
+    }
+
+    #[test]
+    fn test_is_renderable_false() {
+    //     let serde_json::Value::Object(data) = json!({
+    //         format!("{KEY_PREFIX}other"): "foo",
+    //     }) else {
+    //         unreachable!();
+    //     };
+    //     let minijinja_value = minijinja::Value::from_serialize(&data);
+    //     assert!(!is_renderable(&minijinja_value), "Expected the value to not be renderable when it contains a foreign key.");
+
+        assert!(!is_renderable(&minijinja::Value::from("")), "Expected the value to not be renderable when it contains no data.");
+    } 
+
+    #[test]
+    fn displaying_string_as_html_returns_string_itself() {
+        let html_string = String::from("Hello, World!");
+        let result = html_string.to_html_string();
+        assert_eq!(result, "Hello, World!");
+    }
+
+    #[test]
+    fn displaying_str_as_html_returns_string_itself() {
+        let html_string = "Hello, World!";
+        let result = html_string.to_html_string();
+        assert_eq!(result, "Hello, World!");
+    }
+
+    #[test]
+    fn displaying_str_as_itself_display() {
+        let html_content = "Hello, HTML!";
+        let display_output = format!("{}", html_content.to_html_string());
+        assert_eq!(display_output, "Hello, HTML!");
+    }
+
+    #[test]
     fn test_renderable_new() {
         let data = Map::new();
         let renderable = Renderable::new(data);
@@ -747,12 +808,38 @@ mod tests {
 
     #[test]
     fn test_render_element_non_void() {
-        let mut renderable = Renderable::new(Map::new());
-        renderable.set_type(RenderableType::Element);
-        renderable.set_tag("div".to_string());
-        renderable.set_element_content_string();
+        let element_key = format!("{KEY_PREFIX}{KEY_ELEMENT}");
+        let content_key = format!("{KEY_PREFIX}{KEY_ELEMENT_CONTENT}");
+        let serde_json::Value::Object(data) = json!({
+            element_key: "foo",
+            content_key: "bar",
+        }) else {
+            unreachable!();
+        };
+
+        let mut renderable = Renderable::new(data);
+        renderable.build();
         renderable.render();
-        assert!(renderable.output.contains("</div>"));
+
+        assert_eq!(renderable.output(), "<foo>bar</foo>");
+    }
+
+    #[test]
+    fn test_render_element_array() {
+        let element_key = format!("{KEY_PREFIX}{KEY_ELEMENT}");
+        let content_key = format!("{KEY_PREFIX}{KEY_ELEMENT_CONTENT}");
+        let serde_json::Value::Object(data) = json!({
+            element_key: "foo",
+            content_key: ["bar", "baz"],
+        }) else {
+            unreachable!();
+        };
+
+        let mut renderable = Renderable::new(data);
+        renderable.build();
+        renderable.render();
+
+        assert_eq!(renderable.output(), "<foo>barbaz</foo>");
     }
 
     #[test]
@@ -767,7 +854,16 @@ mod tests {
     fn test_script() {
         let attrs = json!({"async": true});
         let script = Renderable::script("http://example.com/script.js", &attrs);
-        assert!(script.output.contains("src=\"http://example.com/script.js\""));
+        assert!(script
+            .output
+            .contains("src=\"http://example.com/script.js\""));
         assert!(script.output.contains("async"));
+    }
+
+    #[test]
+    fn should_add_single_attribute_with_single_class() {
+        let mut renderable = Renderable::default();
+        renderable.add_attr("class", "some".to_string());
+        assert_eq!(renderable.attributes.to_string(), " class=\"some\"");
     }
 }

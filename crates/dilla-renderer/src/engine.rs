@@ -386,7 +386,7 @@ pub fn set_attribute(
                 }
             }
         }
-        return Ok(minijinja::Value::from_serializable(&nv));
+        return Ok(minijinja::Value::from_serialize(&nv));
     }
 
     // String or Array are Map.
