@@ -9,11 +9,12 @@ fn main() {
 
     let design_system = env::var("DS").unwrap_or_else(|_| "test".to_string());
 
-    let mut tpl_dir = dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run".to_string());
+    let tpl_dir = if design_system == "test" { "/tests".to_string() } else { dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run".to_string()) };
+    // let mut tpl_dir = dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run".to_string());
 
-    if design_system == "test" {
-        tpl_dir = "/tests".to_string();
-    }
+    // if design_system == "test" {
+    //     tpl_dir = "/tests".to_string();
+    // }
 
     let root = env::var("CARGO_MANIFEST_DIR").unwrap();
 

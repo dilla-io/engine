@@ -11,7 +11,6 @@
     "tests": {"test":"test"},
     "## More real life examples": "",
     "components": {
-        "test_min": {"id": "foo"},
         "test_component": {
             "id": "test_component",
             "label": "Test component",
@@ -116,7 +115,6 @@
         }
     },
     "styles": {
-        "test_min": {"id": "foo"},
         "test_style": {
             "id": "test_style",
             "label": "Test style",
@@ -183,7 +181,6 @@
         }
     },
     "examples": {
-        "test_min": {"id": "foo"},
         "test_example": {
             "id": "test_example",
             "label": "Test example",
@@ -206,7 +203,6 @@
         }
     },
     "libraries": {
-        "test_min": {"id": "foo"},
         "test_lib_1": {
             "id": "test_lib_1",
             "label": "Test lib 1",

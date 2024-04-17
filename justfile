@@ -139,7 +139,25 @@ test-int test='':
 
 # [test] All internal renderer tests coverage
 test-int-cov out="Stdout":
-	@ RUST_BACKTRACE=0 DS=test cargo tarpaulin --workspace -e wasm-* -e dilla-cli --exclude-files **/bindings.rs --exclude-files **/tests/** -o {{out}}
+	@ RUST_BACKTRACE=0 DS=test cargo tarpaulin \
+		--workspace \
+		--release \
+		--ignore-tests \
+		-e wasm-* \
+		-e dilla-cli \
+		--exclude-files **/bindings.rs \
+		--exclude-files **/tests/** \
+		--exclude-files **/var/** \
+		--exclude-files **/xtask/** \
+		--exclude-files **/crates/wasm-*/** \
+		--exclude-files **/crates/dilla-cli/** \
+		--exclude-files **/build.rs \
+		--exclude-files **/build/** \
+		--exclude-files **/tests/utils/mod.rs \
+		--exclude-files **/dilla-renderer/src/main.rs \
+		--exclude-files **/dilla-renderer/src/timing.rs \
+		--engine Llvm \
+		-o {{out}}
 
 # [test] specific DS test (must have tests in ./run/DS/tests)
 test ds:

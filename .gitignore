@@ -26,6 +26,7 @@ release/
 .cargo
 Cargo.lock
 tarpaulin-report.html
+coverage/
 
 # Node
 node_modules

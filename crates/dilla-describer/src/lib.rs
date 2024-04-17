@@ -105,67 +105,59 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_describe() {
+    fn test_list() {
         let result = describe("components", "_list");
-        assert_eq!(
-            tr(&result),
-            "[\"test_min\",\"test_component\",\"test_component_other\"]"
-        );
-        let result = describe("component", "_list");
-        assert_eq!(
-            tr(&result),
-            "[\"test_min\",\"test_component\",\"test_component_other\"]"
-        );
-        let result = describe("component", "test_min");
-        assert_eq!(tr(&result), "{\"id\": \"foo\"}");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_array());
+        assert_eq!(obj_result.as_array().unwrap().len(), 2);
     }
 
     #[test]
-    fn test_returns_formatted_json_string() {
-        let json = serde_json::json!({
-            "key1": ["value1"],
-            "components": {
-                "foo": {
-                    "id": "foo"
-                }
-            }
-        });
-        let result = describe_inner("components", "_list", &json);
-        assert_eq!(tr(&result), "[\"foo\"]");
-
-        let result = describe_inner("others", "_list", &json);
-        assert_eq!(tr(&result), "{\"error\":\"Not found artefact: others\"}");
-
-        let result = describe_inner("components", "foo", &json);
-        assert_eq!(tr(&result), "{\"id\": \"foo\"}");
-
-        let result = describe_inner("component", "foo", &json);
-        assert_eq!(tr(&result), "{\"id\": \"foo\"}");
-
-        let result = describe_inner("other", "foo", &json);
-        assert_eq!(
-            tr(&result),
-            "{\"error\":\"Not found, empty artefact: others\"}"
-        );
-
-        let result = describe_inner("components", "baz", &json);
-        assert_eq!(
-            tr(&result),
-            "{\"error\":\"Not found artefact id: components::baz\"}"
-        );
+    fn test_singular_list() {
+        let result = describe("component", "_list");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_array());
+        assert_eq!(obj_result.as_array().unwrap().len(), 2);
     }
 
-    fn tr(s: &str) -> String {
-        let mut new_str = s.trim().to_owned();
-        new_str = new_str.replace("\n  ", "").replace("\n", "");
-
-        let mut prev = ' '; // The initial value doesn't really matter
-        new_str.retain(|ch| {
-            let result = ch != ' ' || prev != ' ';
-            prev = ch;
-            result
-        });
-
-        new_str
+    #[test]
+    fn test_not_found_list() {
+        let result = describe("other", "_list");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_object());
+        assert_eq!(obj_result["error"], json!("Not found artefact: others"));
     }
+
+    #[test]
+    fn test_not_found_empty() {
+        let result = describe("foo", "bar");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_object());
+        assert_eq!(obj_result["error"], json!("Not found, empty artefact: foos"));
+    }
+
+    #[test]
+    fn test_not_found_id() {
+        let result = describe("component", "foo");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_object());
+        assert_eq!(obj_result["error"], json!("Not found artefact id: components::foo"));
+    }
+
+    #[test]
+    fn test_component() {
+        let result = describe("components", "test_component");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_object());
+        assert_eq!(obj_result["id"], json!("test_component"));
+    }
+
+    #[test]
+    fn test_singular_component() {
+        let result = describe("component", "test_component");
+        let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
+        assert!(obj_result.is_object());
+        assert_eq!(obj_result["id"], json!("test_component"));
+    }
+
 }

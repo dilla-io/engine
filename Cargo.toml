@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*"]
+members = ["crates/*", "xtask"]
 resolver = "2"
 
 [workspace.package]
@@ -14,7 +14,7 @@ repository = "https://gitlab.com/dilla-io/engine.git"
 [profile.release]
 # debug = true
 # https://github.com/johnthagen/min-sized-rust
-strip = true
+# strip = true
 # opt-level = "s"
 opt-level = "z"
 lto = true
