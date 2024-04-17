@@ -1,6 +1,6 @@
 [package]
 name = "dilla-describer"
-version = "1.0.0"
+version = "1.0.1"
 description = "Dilla describer engine to provide introspection."
 authors.workspace = true
 edition.workspace = true

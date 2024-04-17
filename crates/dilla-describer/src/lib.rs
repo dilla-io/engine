@@ -83,7 +83,8 @@ fn describe_inner(artefact: &str, id: &str, json: &Value) -> String {
         if let Some(v) = json.get(&mut_artefact) {
             value = v;
         } else {
-            return json!({"error":format!("Not found artefact: {}", mut_artefact)}).to_string();
+            return json!({"error":format!("Not found, empty artefact: {}", mut_artefact)})
+                .to_string();
         }
     }
 
@@ -97,4 +98,74 @@ fn describe_inner(artefact: &str, id: &str, json: &Value) -> String {
     }
 
     serde_json::to_string_pretty(value).unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_describe() {
+        let result = describe("components", "_list");
+        assert_eq!(
+            tr(&result),
+            "[\"test_min\",\"test_component\",\"test_component_other\"]"
+        );
+        let result = describe("component", "_list");
+        assert_eq!(
+            tr(&result),
+            "[\"test_min\",\"test_component\",\"test_component_other\"]"
+        );
+        let result = describe("component", "test_min");
+        assert_eq!(tr(&result), "{\"id\": \"foo\"}");
+    }
+
+    #[test]
+    fn test_returns_formatted_json_string() {
+        let json = serde_json::json!({
+            "key1": ["value1"],
+            "components": {
+                "foo": {
+                    "id": "foo"
+                }
+            }
+        });
+        let result = describe_inner("components", "_list", &json);
+        assert_eq!(tr(&result), "[\"foo\"]");
+
+        let result = describe_inner("others", "_list", &json);
+        assert_eq!(tr(&result), "{\"error\":\"Not found artefact: others\"}");
+
+        let result = describe_inner("components", "foo", &json);
+        assert_eq!(tr(&result), "{\"id\": \"foo\"}");
+
+        let result = describe_inner("component", "foo", &json);
+        assert_eq!(tr(&result), "{\"id\": \"foo\"}");
+
+        let result = describe_inner("other", "foo", &json);
+        assert_eq!(
+            tr(&result),
+            "{\"error\":\"Not found, empty artefact: others\"}"
+        );
+
+        let result = describe_inner("components", "baz", &json);
+        assert_eq!(
+            tr(&result),
+            "{\"error\":\"Not found artefact id: components::baz\"}"
+        );
+    }
+
+    fn tr(s: &str) -> String {
+        let mut new_str = s.trim().to_owned();
+        new_str = new_str.replace("\n  ", "").replace("\n", "");
+
+        let mut prev = ' '; // The initial value doesn't really matter
+        new_str.retain(|ch| {
+            let result = ch != ' ' || prev != ' ';
+            prev = ch;
+            result
+        });
+
+        new_str
+    }
 }

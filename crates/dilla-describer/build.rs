@@ -19,9 +19,9 @@ fn main() {
 
     let definitions_path = format!("{}/{}/{}/definitions.json", root, tpl_dir, design_system);
 
-    println!("[DEBUG] design_system: {}", design_system);
-    println!("[DEBUG] tpl_dir: {}", tpl_dir);
-    println!("[DEBUG] definitions_path: {}", definitions_path);
+    // println!("[DEBUG] design_system: {}", design_system);
+    // println!("[DEBUG] tpl_dir: {}", tpl_dir);
+    // println!("[DEBUG] definitions_path: {}", definitions_path);
 
     let path = Path::new(&env::var("OUT_DIR").unwrap()).join("codegen_definitions.rs");
     let mut file = BufWriter::new(File::create(path).unwrap());
