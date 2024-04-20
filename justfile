@@ -140,6 +140,8 @@ test-int test='':
 # [test] All internal renderer tests coverage
 test-int-cov out="Stdout":
 	@ RUST_BACKTRACE=0 DS=test cargo tarpaulin \
+		--skip-clean \
+		--engine llvm \
 		--workspace \
 		--release \
 		--ignore-tests \
@@ -156,7 +158,6 @@ test-int-cov out="Stdout":
 		--exclude-files **/tests/utils/mod.rs \
 		--exclude-files **/dilla-renderer/src/main.rs \
 		--exclude-files **/dilla-renderer/src/timing.rs \
-		--engine Llvm \
 		-o {{out}}
 
 # [test] specific DS test (must have tests in ./run/DS/tests)
@@ -220,3 +221,7 @@ docker-pull:
 	@ docker pull $DILLA_DOCKER_RUST
 	@ docker pull $DILLA_DOCKER_SCHEMAS
 	@ docker pull $DILLA_DOCKER_PREBUILDER
+
+# [docker] SSH project with our Docker image
+docker-ssh:
+	@ docker run -it -v ./:/app -e CARGO_HOME=/app/.cargo -e GITHUB_TOKEN=$GITHUB_TOKEN -u 0 dillaio/docker bash

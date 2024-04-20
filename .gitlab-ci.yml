@@ -30,6 +30,7 @@ test:
   only:
     changes:
       - crates/dilla-renderer/*
+  # when: manual
 
 coverage:
   stage: test
@@ -37,6 +38,7 @@ coverage:
   script:
     - cp crates/dilla-renderer/src/build/ds_base.rs crates/dilla-renderer/src/build/ds.rs
     - RUST_BACKTRACE=0 DS=test cargo tarpaulin
+      --skip-clean
       --engine llvm
       --workspace
       --release
@@ -61,10 +63,11 @@ coverage:
         coverage_format: cobertura
         path: cobertura.xml
   coverage: '/\d+\.\d+% coverage, /'
-  # only:
-  #   - tags
-  # except:
-  #   - branches
+  only:
+    - tags
+    - merge_requests
+  except:
+    - branches
   when: manual
 
 .lint:
@@ -83,7 +86,7 @@ coverage:
   stage: test
   cache: *cache_rust
   before_script:
-    - cargo binstall audit
+    - cargo binstall cargo-audit
   script:
     - cargo audit
   only:
@@ -98,7 +101,7 @@ pages:
     - rm -f crates/dilla-renderer/src/build/ds.rs && cp crates/dilla-renderer/src/build/test.rs crates/dilla-renderer/src/build/ds.rs
     - RUSTC_BOOTSTRAP=1 RUSTDOCFLAGS="--cfg=docsrs --html-in-header doc-header.html --enable-index-page -Z unstable-options" cargo doc --no-deps --document-private-items
     - cd $CI_PROJECT_DIR && mkdir -p public
-    - cd $CI_PROJECT_DIR && cp -r target/doc* public/
+    - cd $CI_PROJECT_DIR && cp -r target/doc/* public/
   artifacts:
     paths:
       - public
