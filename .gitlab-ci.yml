@@ -37,6 +37,7 @@ coverage:
   script:
     - cp crates/dilla-renderer/src/build/ds_base.rs crates/dilla-renderer/src/build/ds.rs
     - RUST_BACKTRACE=0 DS=test cargo tarpaulin
+      --engine llvm
       --workspace
       --release
       -e wasm-*
