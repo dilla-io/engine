@@ -14,9 +14,27 @@ repository = "https://gitlab.com/dilla-io/engine.git"
 [profile.release]
 # debug = true
 # https://github.com/johnthagen/min-sized-rust
-# strip = true
+strip = true
 # opt-level = "s"
 opt-level = "z"
 lto = true
 codegen-units = 1
 panic = "abort"
+
+[profile.release-no-strip]
+inherits = "release"
+strip = false
+
+[profile.bench]
+strip = false
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+debug = true
+
+[profile.test]
+debug = true
+opt-level = 2

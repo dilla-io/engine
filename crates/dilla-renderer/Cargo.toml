@@ -44,7 +44,16 @@ phf_codegen = "0.11"
 walkdir = "2.5"
 
 [dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
 html-minifier = "^5.0"
 pretty_assertions = "^1.4"
 similar-asserts = "^1.5"
 walkdir = "^2.5"
+
+[[bench]]
+name = "test"
+harness = false
+
+[[bench]]
+name = "bootstrap_5"
+harness = false
