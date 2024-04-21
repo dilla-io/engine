@@ -22,7 +22,7 @@ fn main() {
 
     let root_path = env::var("CARGO_MANIFEST_DIR").unwrap();
     let design_system = env::var("DS").unwrap_or_else(|_| "test".to_string());
-    let tpl_dir = dotenv::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run/".to_string());
+    let tpl_dir = env::var("DILLA_TPL_DIR").unwrap_or_else(|_| "../../var/run/".to_string());
 
     let ds_path = if design_system == "test" {
         test::config();
