@@ -58,11 +58,11 @@ check:
 
 # [code] Generate Rust code documentation
 doc:
-	@ RUSTC_BOOTSTRAP=1 RUSTDOCFLAGS="--cfg=docsrs --html-in-header doc-header.html --enable-index-page -Z unstable-options" cargo doc --no-deps --document-private-items
+	@ RUSTC_BOOTSTRAP=1 RUSTDOCFLAGS="--cfg=docsrs --html-in-header doc-header.html --enable-index-page -Z unstable-options" cargo doc --no-deps --document-private-items -p dilla-renderer -p dilla-describer
 
 # [code] Check Rust size
 bloat:
-	@ cargo bloat --crates -n 30
+	@ cargo bloat -p dilla-renderer --crates --profile release-no-strip
 
 # [code] Remove cache, build and generated or build files
 clean:
@@ -136,6 +136,11 @@ sync-all:
 # [test] All internal renderer tests
 test-int test='':
 	@ RUST_BACKTRACE=0 DS=test cargo test --no-default-features --package dilla-renderer -- --exact --nocapture {{test}}
+
+# [bench] Run benches
+bench:
+	@ RUST_BACKTRACE=0 cargo bench -p dilla-renderer --quiet --bench test
+	@ RUST_BACKTRACE=0 DS=bootstrap_5 cargo bench -p dilla-renderer --quiet --bench bootstrap_5
 
 # [test] All internal renderer tests coverage
 test-int-cov out="Stdout":
