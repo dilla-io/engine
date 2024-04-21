@@ -140,6 +140,9 @@ test-int test='':
 # [bench] Run benches
 bench:
 	@ RUST_BACKTRACE=0 cargo bench -p dilla-renderer --quiet --bench test
+
+# [bench] Run benches for Bootstrap 5
+bench-bs5:
 	@ RUST_BACKTRACE=0 DS=bootstrap_5 cargo bench -p dilla-renderer --quiet --bench bootstrap_5
 
 # [test] All internal renderer tests coverage
