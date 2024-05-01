@@ -160,9 +160,9 @@ __build_wasm_jco() {
   _log_debug "npx jco transpile ${_QUIET} --name ${DS} ${_DILLA_DS_TARGET}/wasm/${DS}.wasm --out-dir ${_DILLA_DS_TARGET} $_opt"
 
   cd "${DILLA_DIST_FOLDER}" &&
-    eval npx jco transpile ${_QUIET} --name "${DS}" "${_DILLA_DS_TARGET}/wasm/${DS}.wasm" --out-dir "${_DILLA_DS_TARGET}" $_opt &&
+    eval npx jco transpile ${_QUIET} --name "${DS}" "${_DILLA_DS_TARGET}/wasm/${DS}.wasm" --out-dir "${_DILLA_DS_TARGET}" $_opt > /dev/null &&
     mv "${_DILLA_DS_TARGET}/${DS}.js" "${_DILLA_DS_TARGET}/${DS}.mjs" &&
-    eval npx jco transpile ${_QUIET} --name "${DS}_dev" "${_DILLA_DS_TARGET}/wasm/${DS}_dev.wasm" --out-dir "${_DILLA_DS_TARGET}/tmp" $_opt &&
+    eval npx jco transpile ${_QUIET} --name "${DS}_dev" "${_DILLA_DS_TARGET}/wasm/${DS}_dev.wasm" --out-dir "${_DILLA_DS_TARGET}/tmp" $_opt > /dev/null &&
     mv "${_DILLA_DS_TARGET}/tmp/${DS}_dev.core.wasm" "${_DILLA_DS_TARGET}/" &&
     mv "${_DILLA_DS_TARGET}/tmp/${DS}_dev.core2.wasm" "${_DILLA_DS_TARGET}/" &&
     mv "${_DILLA_DS_TARGET}/tmp/${DS}_dev.js" "${_DILLA_DS_TARGET}/${DS}_dev.mjs" &&
