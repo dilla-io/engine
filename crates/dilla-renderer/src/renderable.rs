@@ -253,13 +253,9 @@ impl Renderable {
     }
 
     fn set_element_tag(&mut self) {
-        self.element_tag = self
-            .data
-            .get(&format!("{KEY_PREFIX}{KEY_ELEMENT}"))
-            .unwrap()
-            .as_str()
-            .unwrap_or_default()
-            .to_string();
+        if let Some(value) = self.data.get(&format!("{KEY_PREFIX}{KEY_ELEMENT}")) {
+            self.element_tag = value.as_str().unwrap_or_default().to_string();
+        }
     }
 
     fn set_element_content(&mut self, env: &mut Environment) {
@@ -277,20 +273,14 @@ impl Renderable {
     }
 
     fn set_element_content_string(&mut self) {
-        let content_key = format!("{KEY_PREFIX}{KEY_ELEMENT_CONTENT}");
-
-        if self.data.contains_key(&content_key) {
-            let content_element = self.data.get(&content_key).unwrap();
-            if content_element.is_string() {
-                // @todo set a @raw key or @markup to allow some html tags?
-                // self.element_content = HtmlEscape(content_element.as_str().unwrap()).to_string();
-                self.element_content = content_element.as_str().unwrap().to_string();
-            } else if content_element.is_array() {
-                for cont in content_element.as_array().unwrap().iter() {
-                    // self.element_content
-                    //     .push_str(&HtmlEscape(cont.as_str().unwrap()).to_string());
-                    self.element_content.push_str(cont.as_str().unwrap());
-                }
+        if let Some(value) = self.data.get(&format!("{KEY_PREFIX}{KEY_ELEMENT_CONTENT}")) {
+            if let Some(string_value) = value.as_str() {
+                self.element_content = string_value.to_string();
+            } else if let Some(array_value) = value.as_array() {
+                self.element_content = array_value
+                    .iter()
+                    .map(|v| v.as_str().unwrap_or_default())
+                    .collect::<String>();
             }
         }
     }
