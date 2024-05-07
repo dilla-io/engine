@@ -25,16 +25,10 @@ panic = "abort"
 inherits = "release"
 strip = false
 
+# Inherit from release
 [profile.bench]
 strip = false
-opt-level = "z"
-lto = true
-codegen-units = 1
-panic = "abort"
 
-[profile.dev]
-debug = true
-
+# Inherit from dev
 [profile.test]
-debug = true
 opt-level = 2

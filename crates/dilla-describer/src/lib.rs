@@ -133,7 +133,10 @@ mod tests {
         let result = describe("foo", "bar");
         let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
         assert!(obj_result.is_object());
-        assert_eq!(obj_result["error"], json!("Not found, empty artefact: foos"));
+        assert_eq!(
+            obj_result["error"],
+            json!("Not found, empty artefact: foos")
+        );
     }
 
     #[test]
@@ -141,7 +144,10 @@ mod tests {
         let result = describe("component", "foo");
         let obj_result: serde_json::Value = serde_json::from_str(&result).unwrap();
         assert!(obj_result.is_object());
-        assert_eq!(obj_result["error"], json!("Not found artefact id: components::foo"));
+        assert_eq!(
+            obj_result["error"],
+            json!("Not found artefact id: components::foo")
+        );
     }
 
     #[test]
@@ -159,5 +165,4 @@ mod tests {
         assert!(obj_result.is_object());
         assert_eq!(obj_result["id"], json!("test_component"));
     }
-
 }

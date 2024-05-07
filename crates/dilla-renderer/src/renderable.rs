@@ -385,7 +385,7 @@ impl Renderable {
             }
         }
 
-        self.component_template = self.component_name.clone()
+        self.component_template.clone_from(&self.component_name)
     }
 
     fn set_component_attributes(&mut self) {

@@ -25,5 +25,5 @@ crate_type = ["cdylib"]
 [dependencies]
 dilla-renderer = { path = "../dilla-renderer", default-features = false }
 dilla-describer = { path = "../dilla-describer", default-features = false }
-html-minifier = "5.0"
+html-minifier = "^5.0"
 extism-pdk = { version = "^1.0", default-features = false }
